@@ -37,7 +37,7 @@ Structure de l'application <span id="application-structure"></span>
 
 Les répertoires et fichiers les plus importants de votre application sont (en supposant que le répertoire racine de l'application est `basic`) :
 
-```
+```js
 basic/                  chemin de base de l'application
     composer.json       utilisé par Composer, décrit les information de paquets
     config/             contient les configurations de l'application et autres
@@ -57,7 +57,7 @@ basic/                  chemin de base de l'application
 
 Dans l'ensemble, les fichiers de l'application peuvent être séparés en deux types : ceux situés dans `basic/web` et ceux situés dans d'autres répertoires. Les premiers peuvent être atteints directement en HTTP (c'est à dire dans un navigateur), tandis que les seconds ne peuvent et ne doivent pas l'être.
 
-Yii est mis en œuvre selon le modèle de conception [modèle-vue-contrôleur (MVC)](http://wikipedia.org/wiki/Model-view-controller),
+Yii est mis en œuvre selon le modèle de conception [modèle-vue-contrôleur (MVC)](https://wikipedia.org/wiki/Model-view-controller),
 ce qui se reflète dans l'organisation des répertoires ci-dessus. Le répertoire `models` contient toutes les [classes modèles](structure-models.md),
 le répertoire `views` contient tous les [scripts de vue](structure-views.md), et le répertoire `controllers` contient toutes les [classes contrôleurs](structure-controllers.md).
 

@@ -33,7 +33,7 @@ In Yii, most probably you'll use [form validation](input-validation.md) to do al
 
 Further reading on the topic:
 
-- <https://www.owasp.org/index.php/Data_Validation>
+- <https://owasp.org/www-community/vulnerabilities/Improper_Data_Validation>
 - <https://www.owasp.org/index.php/Input_Validation_Cheat_Sheet>
 
 
@@ -46,9 +46,9 @@ contexts.
 
 Further reading on the topic:
 
-- <https://www.owasp.org/index.php/Command_Injection>
-- <https://www.owasp.org/index.php/Code_Injection>
-- <https://www.owasp.org/index.php/Cross-site_Scripting_%28XSS%29>
+- <https://owasp.org/www-community/attacks/Command_Injection>
+- <https://owasp.org/www-community/attacks/Code_Injection>
+- <https://owasp.org/www-community/attacks/xss/>
 
 
 Avoiding SQL injections
@@ -117,7 +117,7 @@ You can get details about the syntax in [Quoting Table and Column Names](db-dao.
 
 Further reading on the topic:
 
-- <https://www.owasp.org/index.php/SQL_Injection>
+- <https://owasp.org/www-community/attacks/SQL_Injection>
 
 
 Avoiding XSS
@@ -151,7 +151,7 @@ Note that HtmlPurifier processing is quite heavy so consider adding caching.
 
 Further reading on the topic:
 
-- <https://www.owasp.org/index.php/Cross-site_Scripting_%28XSS%29>
+- <https://owasp.org/www-community/attacks/xss/>
 
 
 Avoiding CSRF
@@ -259,8 +259,8 @@ class ContactAction extends Action
 
 Further reading on the topic:
 
-- <https://www.owasp.org/index.php/CSRF>
-- <https://www.owasp.org/index.php/SameSite>
+- <https://owasp.org/www-community/attacks/csrf>
+- <https://owasp.org/www-community/SameSite>
 
 
 Avoiding file exposure
@@ -288,8 +288,8 @@ details possible. If you absolutely need it check twice that access is properly 
 
 Further reading on the topic:
 
-- <https://www.owasp.org/index.php/Exception_Handling>
-- <https://www.owasp.org/index.php/Top_10_2007-Information_Leakage>
+- <https://owasp.org/www-project-.net/articles/Exception_Handling.md>
+- <https://owasp.org/www-pdf-archive/OWASP_Top_10_2007.pdf> (A6 - Information Leakage and Improper Error Handling)
 
 
 Using secure connection over TLS
@@ -306,7 +306,7 @@ provided by the H5BP project:
 - [IIS](https://github.com/h5bp/server-configs-iis).
 - [Lighttpd](https://github.com/h5bp/server-configs-lighttpd).
 
-> Note: When TLS is configured it is recommended that (session) cookies are send over TLS exclusively.
+> Note: When TLS is configured it is recommended that (session) cookies are sent over TLS exclusively.
   This is achieved by setting the `secure` flag for sessions and/or cookies.
   See the [Sessions and Cookies secure flag](runtime-sessions-cookies.md#secure) for more information.
 
@@ -330,7 +330,7 @@ or explicitly set or filter the value by setting the [[yii\web\Request::setHostI
 
 For more information about the server configuration, please refer to the documentation of your webserver:
 
-- Apache 2: <http://httpd.apache.org/docs/trunk/vhosts/examples.html#defaultallports>
+- Apache 2: <https://httpd.apache.org/docs/trunk/vhosts/examples.html#defaultallports>
 - Nginx: <https://www.nginx.com/resources/wiki/start/topics/examples/server_blocks/>
 
 If you don't have access to the server configuration, you can setup [[yii\filters\HostControl]] filter at
@@ -353,3 +353,29 @@ return [
 
 > Note: you should always prefer web server configuration for 'host header attack' protection instead of the filter usage.
   [[yii\filters\HostControl]] should be used only if server configuration setup is unavailable.
+
+### Configuring SSL peer validation
+
+There is a typical misconception about how to solve SSL certificate validation issues such as:
+
+```
+cURL error 60: SSL certificate problem: unable to get local issuer certificate
+```
+
+or
+
+```
+stream_socket_enable_crypto(): SSL operation failed with code 1. OpenSSL Error messages: error:1416F086:SSL routines:tls_process_server_certificate:certificate verify failed
+```
+
+Many sources wrongly suggest disabling SSL peer verification. That should not be ever done since it enables
+man-in-the middle type of attacks. Instead, PHP should be configured properly:
+
+1. Download [https://curl.haxx.se/ca/cacert.pem](https://curl.haxx.se/ca/cacert.pem).
+2. Add the following to your php.ini:
+  ```
+  openssl.cafile="/path/to/cacert.pem"
+  curl.cainfo="/path/to/cacert.pem".
+  ```
+
+Note that the `cacert.pem` file should be kept up to date.

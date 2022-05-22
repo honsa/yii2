@@ -55,14 +55,14 @@ class Pjax extends Widget
      */
     public $options = [];
     /**
-     * @var string|false the jQuery selector of the links that should trigger pjax requests.
+     * @var string|null|false the jQuery selector of the links that should trigger pjax requests.
      * If not set, all links within the enclosed content of Pjax will trigger pjax requests.
      * If set to false, no code will be registered to handle links.
      * Note that if the response to the pjax request is a full page, a normal request will be sent again.
      */
     public $linkSelector;
     /**
-     * @var string|false the jQuery selector of the forms whose submissions should trigger pjax requests.
+     * @var string|null|false the jQuery selector of the forms whose submissions should trigger pjax requests.
      * If not set, all forms with `data-pjax` attribute within the enclosed content of Pjax will trigger pjax requests.
      * If set to false, no code will be registered to handle forms.
      * Note that if the response to the pjax request is a full page, a normal request will be sent again.
@@ -168,7 +168,6 @@ class Pjax extends Widget
         $response->format = Response::FORMAT_HTML;
         $response->content = $content;
         $response->headers->setDefault('X-Pjax-Url', Yii::$app->request->url);
-        $response->send();
 
         Yii::$app->end();
     }
@@ -205,7 +204,7 @@ class Pjax extends Widget
         if ($this->formSelector !== false) {
             $formSelector = Json::htmlEncode($this->formSelector !== null ? $this->formSelector : '#' . $id . ' form[data-pjax]');
             $submitEvent = Json::htmlEncode($this->submitEvent);
-            $js .= "\njQuery(document).on($submitEvent, $formSelector, function (event) {jQuery.pjax.submit(event, $options);});";
+            $js .= "\njQuery(document).off($submitEvent, $formSelector).on($submitEvent, $formSelector, function (event) {jQuery.pjax.submit(event, $options);});";
         }
         $view = $this->getView();
         PjaxAsset::register($view);

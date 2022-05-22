@@ -39,7 +39,7 @@ class ErrorHandler extends \yii\base\ErrorHandler
      */
     public $maxTraceSourceLines = 13;
     /**
-     * @var string the route (e.g. `site/error`) to the controller action that will be used
+     * @var string|null the route (e.g. `site/error`) to the controller action that will be used
      * to display external errors. Inside the action, it can retrieve the error information
      * using `Yii::$app->errorHandler->exception`. This property defaults to null, meaning ErrorHandler
      * will handle the error display.
@@ -84,7 +84,7 @@ class ErrorHandler extends \yii\base\ErrorHandler
 
     /**
      * Renders the exception.
-     * @param \Exception|\Error $exception the exception to be rendered.
+     * @param \Throwable $exception the exception to be rendered.
      */
     protected function renderException($exception)
     {
@@ -105,6 +105,7 @@ class ErrorHandler extends \yii\base\ErrorHandler
         $useErrorView = $response->format === Response::FORMAT_HTML && (!YII_DEBUG || $exception instanceof UserException);
 
         if ($useErrorView && $this->errorAction !== null) {
+            Yii::$app->view->clear();
             $result = Yii::$app->runAction($this->errorAction);
             if ($result instanceof Response) {
                 $response = $result;
@@ -137,7 +138,7 @@ class ErrorHandler extends \yii\base\ErrorHandler
 
     /**
      * Converts an exception into an array.
-     * @param \Exception|\Error $exception the exception being converted
+     * @param \Throwable $exception the exception being converted
      * @return array the array representation of the exception.
      */
     protected function convertExceptionToArray($exception)
@@ -179,7 +180,7 @@ class ErrorHandler extends \yii\base\ErrorHandler
      */
     public function htmlEncode($text)
     {
-        return htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
+        return htmlspecialchars($text, ENT_NOQUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8');
     }
 
     /**
@@ -271,7 +272,7 @@ class ErrorHandler extends \yii\base\ErrorHandler
 
     /**
      * Renders the previous exception stack for a given Exception.
-     * @param \Exception $exception the exception whose precursors should be rendered.
+     * @param \Throwable $exception the exception whose precursors should be rendered.
      * @return string HTML content of the rendered previous exceptions.
      * Empty string if there are none.
      */
@@ -325,7 +326,7 @@ class ErrorHandler extends \yii\base\ErrorHandler
 
     /**
      * Renders call stack.
-     * @param \Exception|\ParseError $exception exception to get call stack from
+     * @param \Throwable $exception exception to get call stack from
      * @return string HTML content of the rendered call stack.
      * @since 2.0.12
      */
@@ -400,7 +401,7 @@ class ErrorHandler extends \yii\base\ErrorHandler
             'http://lighttpd.net/' => ['lighttpd'],
             'http://gwan.com/' => ['g-wan', 'gwan'],
             'http://iis.net/' => ['iis', 'services'],
-            'https://secure.php.net/manual/en/features.commandline.webserver.php' => ['development'],
+            'https://www.php.net/manual/en/features.commandline.webserver.php' => ['development'],
         ];
         if (isset($_SERVER['SERVER_SOFTWARE'])) {
             foreach ($serverUrls as $url => $keywords) {
@@ -481,8 +482,8 @@ class ErrorHandler extends \yii\base\ErrorHandler
 
     /**
      * Returns human-readable exception name.
-     * @param \Exception $exception
-     * @return string human-readable exception name or null if it cannot be determined
+     * @param \Throwable $exception
+     * @return string|null human-readable exception name or null if it cannot be determined
      */
     public function getExceptionName($exception)
     {

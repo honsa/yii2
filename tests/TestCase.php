@@ -29,8 +29,8 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 
     /**
      * Returns a test configuration param from /data/config.php.
-     * @param  string $name params name
-     * @param  mixed $default default value to use when param is not set.
+     * @param string $name params name
+     * @param mixed $default default value to use when param is not set.
      * @return mixed  the value of the configuration param
      */
     public static function getParam($name, $default = null)
@@ -82,6 +82,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
                     'cookieValidationKey' => 'wefJDF8sfdsfSDefwqdxj9oq',
                     'scriptFile' => __DIR__ . '/index.php',
                     'scriptUrl' => '/index.php',
+                    'isConsoleRequest' => false,
                 ],
             ],
         ], $config));
@@ -215,5 +216,21 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     public function assertIsOneOf($actual, array $expected, $message = '')
     {
         self::assertThat($actual, new IsOneOfAssert($expected), $message);
+    }
+
+    /**
+     * Changes db component config
+     * @param $db
+     */
+    protected function switchDbConnection($db)
+    {
+        $databases = $this->getParam('databases');
+        if (isset($databases[$db])) {
+            $database = $databases[$db];
+            Yii::$app->db->close();
+            Yii::$app->db->dsn = isset($database['dsn']) ? $database['dsn'] : null;
+            Yii::$app->db->username = isset($database['username']) ? $database['username'] : null;
+            Yii::$app->db->password = isset($database['password']) ? $database['password'] : null;
+        }
     }
 }

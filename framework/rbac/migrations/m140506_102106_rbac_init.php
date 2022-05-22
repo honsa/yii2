@@ -40,7 +40,7 @@ class m140506_102106_rbac_init extends \yii\db\Migration
 
     protected function isOracle()
     {
-        return $this->db->driverName === 'oci';
+        return $this->db->driverName === 'oci' || $this->db->driverName === 'oci8';
     }
 
     /**
@@ -144,9 +144,10 @@ class m140506_102106_rbac_init extends \yii\db\Migration
     {
         $authManager = $this->getAuthManager();
         $this->db = $authManager->db;
+        $schema = $this->db->getSchema()->defaultSchema;
 
         if ($this->isMSSQL()) {
-            $this->execute('DROP TRIGGER {$schema}.trigger_auth_item_child;');
+            $this->execute("DROP TRIGGER {$schema}.trigger_auth_item_child;");
         }
 
         $this->dropTable($authManager->assignmentTable);

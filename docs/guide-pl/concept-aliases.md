@@ -109,8 +109,8 @@ Yii predefiniuje zestaw aliasów do łatwego wskazywania często używanych ści
   [skrypt wejścia](structure-entry-scripts.md).
 - `@web`, bazowy adres URL aktualnie używanej aplikacji Web. Wskazuje na tą samą wartość co [[yii\web\Request::baseUrl]].
 - `@vendor`, [[yii\base\Application::vendorPath|folder pakietów composera]]. Domyślnie wskazuje na `@app/vendor`.
-- `@bower`, bazowy folder zawierający [pakiety bowera](http://bower.io/). Domyślnie wskazuje na `@vendor/bower`.
-- `@npm`, bazowy folder zawierający [pakiety npm](https://www.npmjs.org/). Domyślnie wskazuje na `@vendor/npm`.
+- `@bower`, bazowy folder zawierający [pakiety bowera](https://bower.io/). Domyślnie wskazuje na `@vendor/bower`.
+- `@npm`, bazowy folder zawierający [pakiety npm](https://www.npmjs.com/). Domyślnie wskazuje na `@vendor/npm`.
 
 Alias `@yii` jest definiowany poprzez dołączenie pliku `Yii.php` w [skrypcie wejścia](structure-entry-scripts.md).
 Pozostałe aliasy są definiowane w konstruktorze aplikacji podczas ładowania [konfiguracji](concept-configurations.md).

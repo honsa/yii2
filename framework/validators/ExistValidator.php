@@ -49,13 +49,13 @@ use yii\db\QueryInterface;
 class ExistValidator extends Validator
 {
     /**
-     * @var string the name of the ActiveRecord class that should be used to validate the existence
+     * @var string|null the name of the ActiveRecord class that should be used to validate the existence
      * of the current attribute value. If not set, it will use the ActiveRecord class of the attribute being validated.
      * @see targetAttribute
      */
     public $targetClass;
     /**
-     * @var string|array the name of the ActiveRecord attribute that should be used to
+     * @var string|array|null the name of the ActiveRecord attribute that should be used to
      * validate the existence of the current attribute value. If not set, it will use the name
      * of the attribute currently being validated. You may use an array to validate the existence
      * of multiple columns at the same time. The array key is the name of the attribute with the value to validate,
@@ -131,14 +131,14 @@ class ExistValidator extends Validator
             $relationQuery->andWhere($this->filter);
         }
 
-        if ($this->forceMasterDb && method_exists($model::getDb(), 'useMaster')) {
-            $model::getDb()->useMaster(function() use ($relationQuery, &$exists) {
-                $exists = $relationQuery->exists();
+        $connection = $model::getDb();
+        if ($this->forceMasterDb && method_exists($connection, 'useMaster')) {
+            $exists = $connection->useMaster(function() use ($relationQuery) {
+                return $relationQuery->exists();
             });
         } else {
             $exists = $relationQuery->exists();
         }
-
 
         if (!$exists) {
             $this->addError($model, $attribute, $this->message);
@@ -169,7 +169,7 @@ class ExistValidator extends Validator
             $conditions[] = $params;
         }
 
-        $targetClass = $this->targetClass === null ? get_class($model) : $this->targetClass;
+        $targetClass = $this->getTargetClass($model);
         $query = $this->createQuery($targetClass, $conditions);
 
         if (!$this->valueExists($targetClass, $query, $model->$attribute)) {
@@ -181,7 +181,7 @@ class ExistValidator extends Validator
      * Processes attributes' relations described in $targetAttribute parameter into conditions, compatible with
      * [[\yii\db\Query::where()|Query::where()]] key-value format.
      *
-     * @param $targetAttribute array|string $attribute the name of the ActiveRecord attribute that should be used to
+     * @param $targetAttribute array|string|null $attribute the name of the ActiveRecord attribute that should be used to
      * validate the existence of the current attribute value. If not set, it will use the name
      * of the attribute currently being validated. You may use an array to validate the existence
      * of multiple columns at the same time. The array key is the name of the attribute with the value to validate,
@@ -246,9 +246,9 @@ class ExistValidator extends Validator
     }
 
     /**
-     * Check whether value exists in target table
+     * Check whether value exists in target table.
      *
-     * @param string $targetClass
+     * @param string $targetClass the model
      * @param QueryInterface $query
      * @param mixed $value the value want to be checked
      * @return bool
@@ -259,8 +259,8 @@ class ExistValidator extends Validator
         $exists = false;
 
         if ($this->forceMasterDb && method_exists($db, 'useMaster')) {
-            $db->useMaster(function ($db) use ($query, $value, &$exists) {
-                $exists = $this->queryValueExists($query, $value);
+            $exists = $db->useMaster(function () use ($query, $value) {
+                return $this->queryValueExists($query, $value);
             });
         } else {
             $exists = $this->queryValueExists($query, $value);
@@ -271,7 +271,7 @@ class ExistValidator extends Validator
 
 
     /**
-     * Run query to check if value exists
+     * Run query to check if value exists.
      *
      * @param QueryInterface $query
      * @param mixed $value the value to be checked
@@ -280,7 +280,7 @@ class ExistValidator extends Validator
     private function queryValueExists($query, $value)
     {
         if (is_array($value)) {
-            return $query->count("DISTINCT [[$this->targetAttribute]]") == count($value) ;
+            return $query->count("DISTINCT [[$this->targetAttribute]]") == count(array_unique($value));
         }
         return $query->exists();
     }
@@ -308,7 +308,7 @@ class ExistValidator extends Validator
      * Returns conditions with alias.
      * @param ActiveQuery $query
      * @param array $conditions array of condition, keys to be modified
-     * @param null|string $alias set empty string for no apply alias. Set null for apply primary table alias
+     * @param string|null $alias set empty string for no apply alias. Set null for apply primary table alias
      * @return array
      */
     private function applyTableAlias($query, $conditions, $alias = null)

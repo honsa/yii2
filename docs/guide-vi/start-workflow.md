@@ -37,7 +37,7 @@ Cấu trúc ứng dụng (Application Structure) <span id="application-structure
 
 Những thư mục và tập tin quan trọng nhất của ứng dụng (giả sử thư mục gốc của ứng dụng tên là `basic`):
 
-```
+```js
 basic/                  Thư mục gốc ứng dụng
     composer.json       Tập tin cấu hình Composer, mô tả thông tin gói
     config/             Chứa các cấu hình ứng dụng và cấu hình khác
@@ -58,7 +58,7 @@ basic/                  Thư mục gốc ứng dụng
 Nói chung, những tập tin trong ứng dụng có thể chia thành hai loại: tập tin nằm trong thư mục `basic/web` và những tập
 tin nằm ở thư mục khác. Trước dây có thể truy cập trực tiếp qua HTTP (chẳng hạn như một trình duyệt), tuy nhiên sau này không thể truy cập và không nên có.
 
-Yii thực thi theo mẫu thiết kế [model-view-controller (MVC)](http://wikipedia.org/wiki/Model-view-controller),
+Yii thực thi theo mẫu thiết kế [model-view-controller (MVC)](https://wikipedia.org/wiki/Model-view-controller),
 Điều này được phản ánh trong cấu trúc đường dẫn ở trên. Thư mục `models` chứa tất cả [lớp dữ liệu (model)](structure-models.md),
 còn thư mục `views` sẽ chứa tất cả [view scripts](structure-views.md), và thư mục `controllers` chứa tất cả
 [lớp điều khiển (controller classes)](structure-controllers.md).

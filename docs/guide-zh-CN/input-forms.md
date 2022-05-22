@@ -107,7 +107,7 @@ echo $form->field($model, 'items[]')->checkboxList(['a' => 'Item A', 'b' => 'Ite
 
 > 表单和它们的子元素不应该使用与表单的属性冲突的 input name 或 id，
 > 例如 `submit`，`length`，或者 `method`。
-> 要检查你的标签是否存在这些问题，一个完整的规则列表详见 [DOMLint](http://kangax.github.io/domlint/)。
+> 要检查你的标签是否存在这些问题，一个完整的规则列表详见 [DOMLint](https://kangax.github.io/domlint/)。
 
 额外的 HTML 标签可以使用纯 HTML 或者 [[yii\helpers\Html|Html]]-辅助类中的方法来添加到表单中，就如上面例子中的
 [[yii\helpers\Html::submitButton()|Html::submitButton()]]。
@@ -127,7 +127,7 @@ echo $form->field($model, 'items[]')->checkboxList(['a' => 'Item A', 'b' => 'Ite
 > }
 > ```
 
-创建下拉列表 <span id="creating-activeform-dropdownlist"></span>
+创建下拉列表 <span id="creating-activeform-lists"></span>
 ------------
 
 有三种类型的列表：

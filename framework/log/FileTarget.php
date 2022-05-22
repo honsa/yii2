@@ -26,7 +26,7 @@ use yii\helpers\FileHelper;
 class FileTarget extends Target
 {
     /**
-     * @var string log file path or [path alias](guide:concept-aliases). If not set, it will use the "@runtime/logs/app.log" file.
+     * @var string|null log file path or [path alias](guide:concept-aliases). If not set, it will use the "@runtime/logs/app.log" file.
      * The directory containing the log files will be automatically created if not existing.
      */
     public $logFile;
@@ -46,7 +46,7 @@ class FileTarget extends Target
      */
     public $maxLogFiles = 5;
     /**
-     * @var int the permission to be set for newly created log files.
+     * @var int|null the permission to be set for newly created log files.
      * This value will be used by PHP chmod() function. No umask will be applied.
      * If not set, the permission will be determined by the current environment.
      */
@@ -64,9 +64,9 @@ class FileTarget extends Target
      * systems which do not play well with rename on open files. Rotation by renaming however is
      * a bit faster.
      *
-     * The problem with windows systems where the [rename()](https://secure.php.net/manual/en/function.rename.php)
+     * The problem with windows systems where the [rename()](https://www.php.net/manual/en/function.rename.php)
      * function does not work with files that are opened by some process is described in a
-     * [comment by Martin Pelletier](https://secure.php.net/manual/en/function.rename.php#102274) in
+     * [comment by Martin Pelletier](https://www.php.net/manual/en/function.rename.php#102274) in
      * the PHP documentation. By setting rotateByCopy to `true` you can work
      * around this problem.
      */
@@ -101,8 +101,10 @@ class FileTarget extends Target
      */
     public function export()
     {
-        $logPath = dirname($this->logFile);
-        FileHelper::createDirectory($logPath, $this->dirMode, true);
+        if (strpos($this->logFile, '://') === false || strncmp($this->logFile, 'file://', 7) === 0) {
+            $logPath = dirname($this->logFile);
+            FileHelper::createDirectory($logPath, $this->dirMode, true);
+        }
 
         $text = implode("\n", array_map([$this, 'formatMessage'], $this->messages)) . "\n";
         if (($fp = @fopen($this->logFile, 'a')) === false) {
@@ -121,21 +123,21 @@ class FileTarget extends Target
             $writeResult = @file_put_contents($this->logFile, $text, FILE_APPEND | LOCK_EX);
             if ($writeResult === false) {
                 $error = error_get_last();
-                throw new LogRuntimeException("Unable to export log through file!: {$error['message']}");
+                throw new LogRuntimeException("Unable to export log through file ({$this->logFile})!: {$error['message']}");
             }
             $textSize = strlen($text);
             if ($writeResult < $textSize) {
-                throw new LogRuntimeException("Unable to export whole log through file! Wrote $writeResult out of $textSize bytes.");
+                throw new LogRuntimeException("Unable to export whole log through file ({$this->logFile})! Wrote $writeResult out of $textSize bytes.");
             }
         } else {
             $writeResult = @fwrite($fp, $text);
             if ($writeResult === false) {
                 $error = error_get_last();
-                throw new LogRuntimeException("Unable to export log through file!: {$error['message']}");
+                throw new LogRuntimeException("Unable to export log through file ({$this->logFile})!: {$error['message']}");
             }
             $textSize = strlen($text);
             if ($writeResult < $textSize) {
-                throw new LogRuntimeException("Unable to export whole log through file! Wrote $writeResult out of $textSize bytes.");
+                throw new LogRuntimeException("Unable to export whole log through file ({$this->logFile})! Wrote $writeResult out of $textSize bytes.");
             }
             @flock($fp, LOCK_UN);
             @fclose($fp);

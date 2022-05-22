@@ -70,6 +70,10 @@ class QueryBuilder extends \yii\db\QueryBuilder
         if (empty($uniqueNames)) {
             return $this->insert($table, $insertColumns, $params);
         }
+        if ($updateNames === []) {
+            // there are no columns to update
+            $updateColumns = false;
+        }
 
         $onCondition = ['or'];
         $quotedTableName = $this->db->quoteTableName($table);
@@ -259,7 +263,7 @@ class QueryBuilder extends \yii\db\QueryBuilder
      *
      * @param string $table table name
      * @param string $column column name
-     * @return null|string the column definition
+     * @return string|null the column definition
      * @throws Exception in case when table does not contain column
      * @since 2.0.8
      */
