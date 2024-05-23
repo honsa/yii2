@@ -528,7 +528,7 @@ abstract class SchemaTest extends DatabaseTestCase
             $this->assertSame($expected['precision'], $column->precision, "precision of column $name does not match.");
             $this->assertSame($expected['scale'], $column->scale, "scale of column $name does not match.");
             if (\is_object($expected['defaultValue'])) {
-                $this->assertInternalType('object', $column->defaultValue, "defaultValue of column $name is expected to be an object but it is not.");
+                $this->assertIsObject($column->defaultValue, "defaultValue of column $name is expected to be an object but it is not.");
                 $this->assertEquals((string)$expected['defaultValue'], (string)$column->defaultValue, "defaultValue of column $name does not match.");
             } else {
                 $this->assertEquals($expected['defaultValue'], $column->defaultValue, "defaultValue of column $name does not match.");
@@ -773,6 +773,14 @@ abstract class SchemaTest extends DatabaseTestCase
             $this->expectException('yii\base\NotSupportedException');
         }
 
+        if (
+            $this->driverName === 'mysql' &&
+            version_compare($this->getConnection(false)->getServerVersion(), '8.0.16', '<') &&
+            $type === 'checks'
+        ) {
+            $this->expectException('yii\base\NotSupportedException');
+        }
+
         $constraints = $this->getConnection(false)->getSchema()->{'getTable' . ucfirst($type)}($tableName);
         $this->assertMetadataEquals($expected, $constraints);
     }
@@ -786,6 +794,14 @@ abstract class SchemaTest extends DatabaseTestCase
     public function testTableSchemaConstraintsWithPdoUppercase($tableName, $type, $expected)
     {
         if ($expected === false) {
+            $this->expectException('yii\base\NotSupportedException');
+        }
+
+        if (
+            $this->driverName === 'mysql' &&
+            version_compare($this->getConnection(false)->getServerVersion(), '8.0.16', '<') &&
+            $type === 'checks'
+        ) {
             $this->expectException('yii\base\NotSupportedException');
         }
 
@@ -807,6 +823,14 @@ abstract class SchemaTest extends DatabaseTestCase
             $this->expectException('yii\base\NotSupportedException');
         }
 
+        if (
+            $this->driverName === 'mysql' &&
+            version_compare($this->getConnection(false)->getServerVersion(), '8.0.16', '<') &&
+            $type === 'checks'
+        ) {
+            $this->expectException('yii\base\NotSupportedException');
+        }
+
         $connection = $this->getConnection(false);
         $connection->getSlavePdo(true)->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
         $constraints = $connection->getSchema()->{'getTable' . ucfirst($type)}($tableName, true);
@@ -815,12 +839,25 @@ abstract class SchemaTest extends DatabaseTestCase
 
     private function assertMetadataEquals($expected, $actual)
     {
-        $this->assertInternalType(strtolower(\gettype($expected)), $actual);
+        switch (\strtolower(\gettype($expected))) {
+            case 'object':
+                $this->assertIsObject($actual);
+                break;
+            case 'array':
+                $this->assertIsArray($actual);
+                break;
+            case 'null':
+                $this->assertNull($actual);
+                break;
+        }
+
         if (\is_array($expected)) {
             $this->normalizeArrayKeys($expected, false);
             $this->normalizeArrayKeys($actual, false);
         }
+
         $this->normalizeConstraints($expected, $actual);
+
         if (\is_array($expected)) {
             $this->normalizeArrayKeys($expected, true);
             $this->normalizeArrayKeys($actual, true);

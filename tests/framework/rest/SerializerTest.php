@@ -18,7 +18,7 @@ use yiiunit\TestCase;
  */
 class SerializerTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->mockApplication([
@@ -439,6 +439,30 @@ class SerializerTest extends TestCase
         ]);
         $serializer->preserveKeys = $saveKeys;
         $this->assertEmpty($serializer->serialize($dataProvider));
+        $this->assertNotEmpty($serializer->response->getHeaders()->get($serializer->totalCountHeader));
+
+        $arrayDataProviderMock = $this->getMockBuilder(ArrayDataProvider::className())
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        // stub getModels to prevent empty
+        $arrayDataProviderMock
+            ->method('getModels')
+            ->willReturn($expectedResult);
+
+        // stub getPagination for header
+        $arrayDataProviderMock
+            ->method('getPagination')
+            ->willReturn($dataProvider->getPagination());
+
+        // assert normal HEAD is empty response
+        $this->assertEmpty($serializer->serialize($arrayDataProviderMock));
+
+        // Test #20002:  Set up the expectation for the getModels method
+        $arrayDataProviderMock->expects($this->never())
+            ->method('getModels');
+
+        // reset Method
         unset($_POST[$request->methodParam], $_SERVER['REQUEST_METHOD']);
     }
 

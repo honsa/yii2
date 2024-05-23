@@ -9,6 +9,7 @@ Yii Framework 2 Change Log
 - Bug #18469: Fixed `Link::serialize(array $links)` method in `yii\web\Link` (ggh2e3)
 - Bug #19691: Allow using custom class to style error summary (skepticspriggan)
 - Bug #20040: Fix type `boolean` in `MSSQL` (terabytesoftw)
+- Bug #20055: Fix Response header X-Pagination-Total-Count is always 0 (lav45, xicond)
 - Bug #20005: Fix `yii\console\controllers\ServeController` to specify the router script (terabytesoftw)
 - Bug #19060: Fix `yii\widgets\Menu` bug when using Closure for active item and adding additional tests in `tests\framework\widgets\MenuTest` (atrandafir)
 - Bug #13920: Fixed erroneous validation for specific cases (tim-fischer-maschinensucher)
@@ -20,8 +21,13 @@ Yii Framework 2 Change Log
 - Enh #20042: Add empty array check to `ActiveQueryTrait::findWith()` (renkas)
 - Enh #20032: Added `yii\helpers\BaseStringHelper::mask()` method for string masking with multibyte support (salehhashemi1992)
 - Enh #20034: Added `yii\helpers\BaseStringHelper::findBetween()` to retrieve a substring that lies between two strings (salehhashemi1992)
+- Bug #20083: Fix deprecated warning implicit conversion from float (skepticspriggan)
+- Enh #20087: Add custom attributes to script tags (skepticspriggan)
 - Enh #20121: Added `yiisoft/yii2-coding-standards` to composer `require-dev` and lint code to comply with PSR12 (razvanphp)
-
+- New #20137: Added `yii\caching\CallbackDependency` to allow using a callback to determine if a cache dependency is still valid (laxity7)
+- Enh #20134: Raise minimum `PHP` version to `7.3` (@terabytesoftw)
+- Bug #20141: Update `ezyang/htmlpurifier` dependency to version `4.17` (@terabytesoftw)
+- Bug #19817: Add MySQL Query `addCheck()` and `dropCheck()` (@bobonov)
 
 2.0.49.2 October 12, 2023
 -------------------------
