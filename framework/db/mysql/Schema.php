@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @link https://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
@@ -205,8 +204,10 @@ SQL;
      */
     protected function loadTableChecks($tableName)
     {
+        $version = $this->db->getServerVersion();
+
         // check version MySQL >= 8.0.16
-        if (version_compare($this->db->getSlavePdo()->getAttribute(\PDO::ATTR_SERVER_VERSION), '8.0.16', '<')) {
+        if (\stripos($version, 'MariaDb') === false && \version_compare($version, '8.0.16', '<')) {
             throw new NotSupportedException('MySQL < 8.0.16 does not support check constraints.');
         }
 
@@ -230,17 +231,9 @@ SQL;
         $tableRows = $this->normalizePdoRowKeyCase($tableRows, true);
 
         foreach ($tableRows as $tableRow) {
-            $matches = [];
-            $columnName = null;
-
-            if (preg_match('/\(`?([a-zA-Z0-9_]+)`?\s*[><=]/', $tableRow['check_clause'], $matches)) {
-                $columnName = $matches[1];
-            }
-
             $check = new CheckConstraint(
                 [
                     'name' => $tableRow['constraint_name'],
-                    'columnNames' => [$columnName],
                     'expression' => $tableRow['check_clause'],
                 ]
             );
@@ -380,10 +373,19 @@ SQL;
             }
             throw $e;
         }
+
+
+        $jsonColumns = $this->getJsonColumns($table);
+
         foreach ($columns as $info) {
             if ($this->db->slavePdo->getAttribute(\PDO::ATTR_CASE) !== \PDO::CASE_LOWER) {
                 $info = array_change_key_case($info, CASE_LOWER);
             }
+
+            if (\in_array($info['field'], $jsonColumns, true)) {
+                $info['type'] = static::TYPE_JSON;
+            }
+
             $column = $this->loadColumnSchema($info);
             $table->columns[$column->name] = $column;
             if ($column->isPrimaryKey) {
@@ -640,5 +642,21 @@ SQL;
         }
 
         return $result[$returnType];
+    }
+
+    private function getJsonColumns(TableSchema $table): array
+    {
+        $sql = $this->getCreateTableSql($table);
+        $result = [];
+
+        $regexp = '/json_valid\([\`"](.+)[\`"]\s*\)/mi';
+
+        if (\preg_match_all($regexp, $sql, $matches, PREG_SET_ORDER)) {
+            foreach ($matches as $match) {
+                $result[] = $match[1];
+            }
+        }
+
+        return $result;
     }
 }
