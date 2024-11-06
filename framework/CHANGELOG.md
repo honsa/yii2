@@ -4,8 +4,14 @@ Yii Framework 2 Change Log
 2.0.52 under development
 ------------------------
 
-- no changes in this release.
-
+- Bug #20232: Fix regression introduced in `GHSA-cjcc-p67m-7qxm` while attaching behavior defined by `__class` array key (erickskrauch)
+- Bug #20231: Fix regression introduced in #20167 in `yii\validators\FileValidator` (bizley)
+- Enh #20247: Support for variadic console controller action methods (brandonkelly)
+- Bug #20256: Add support for dropping views in MSSQL server when running migrate/fresh (ambrozt)
+- Enh #20248: Add support for attaching behaviors in configurations with Closure (timkelty)
+- Enh #20267: Fixed called class check in `Widget::end()` when widget configured using callable (rob006, jrajamaki)
+- Enh #20268: Minor optimisation in `\yii\helpers\BaseArrayHelper::map` (chriscpty)
+- Enh #20273: Remove unnecessary `paragonie/random_compat` dependency (timwolla)
 
 2.0.51 July 18, 2024
 --------------------
