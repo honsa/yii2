@@ -71,6 +71,21 @@ use yii\base\InvalidConfigException;
  * @since 2.0
  *
  * @template T of (ActiveRecord|array)
+ *
+ * @phpstan-method T|null one($db = null)
+ * @psalm-method T|null one($db = null)
+ *
+ * @phpstan-method T[] all($db = null)
+ * @psalm-method T[] all($db = null)
+ *
+ * @phpstan-method ($value is true ? (T is array ? static<T> : static<array<string, mixed>>) : static<T>) asArray($value = true)
+ * @psalm-method ($value is true ? (T is array ? static<T> : static<array<string, mixed>>) : static<T>) asArray($value = true)
+ *
+ * @phpstan-method BatchQueryResult<int, T[]> batch($batchSize = 100, $db = null)
+ * @psalm-method BatchQueryResult<int, T[]> batch($batchSize = 100, $db = null)
+ *
+ * @phpstan-method BatchQueryResult<int, T> each($batchSize = 100, $db = null)
+ * @psalm-method BatchQueryResult<int, T> each($batchSize = 100, $db = null)
  */
 class ActiveQuery extends Query implements ActiveQueryInterface
 {
@@ -173,7 +188,7 @@ class ActiveQuery extends Query implements ActiveQueryInterface
                 $this->filterByModels($viaModels);
             } elseif (is_array($this->via)) {
                 // via relation
-                /* @var $viaQuery ActiveQuery */
+                /** @var self $viaQuery */
                 list($viaName, $viaQuery, $viaCallableUsed) = $this->via;
                 if ($viaQuery->multiple) {
                     if ($viaCallableUsed) {
@@ -251,7 +266,7 @@ class ActiveQuery extends Query implements ActiveQueryInterface
     private function removeDuplicatedModels($models)
     {
         $hash = [];
-        /* @var $class ActiveRecord */
+        /** @var ActiveRecord $class */
         $class = $this->modelClass;
         $pks = $class::primaryKey();
 
@@ -317,32 +332,6 @@ class ActiveQuery extends Query implements ActiveQueryInterface
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @return BatchQueryResult
-     * @psalm-return T[][]|BatchQueryResult
-     * @phpstan-return T[][]|BatchQueryResult
-     * @codeCoverageIgnore
-     */
-    public function batch($batchSize = 100, $db = null)
-    {
-        return parent::batch($batchSize, $db);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return BatchQueryResult
-     * @psalm-return T[]|BatchQueryResult
-     * @phpstan-return T[]|BatchQueryResult
-     * @codeCoverageIgnore
-     */
-    public function each($batchSize = 100, $db = null)
-    {
-        return parent::each($batchSize, $db);
-    }
-
-    /**
      * Creates a DB command that can be used to execute this query.
      * @param Connection|null $db the DB connection used to create the DB command.
      * If `null`, the DB connection returned by [[modelClass]] will be used.
@@ -350,7 +339,7 @@ class ActiveQuery extends Query implements ActiveQueryInterface
      */
     public function createCommand($db = null)
     {
-        /* @var $modelClass ActiveRecord */
+        /** @var ActiveRecord $modelClass */
         $modelClass = $this->modelClass;
         if ($db === null) {
             $db = $modelClass::getDb();
@@ -374,7 +363,7 @@ class ActiveQuery extends Query implements ActiveQueryInterface
      */
     protected function queryScalar($selectExpression, $db)
     {
-        /* @var $modelClass ActiveRecord */
+        /** @var ActiveRecord $modelClass */
         $modelClass = $this->modelClass;
         if ($db === null) {
             $db = $modelClass::getDb();
@@ -463,7 +452,7 @@ class ActiveQuery extends Query implements ActiveQueryInterface
                 list(, $relation, $alias) = $matches;
                 $name = $relation;
                 $callback = function ($query) use ($callback, $alias) {
-                    /* @var $query ActiveQuery */
+                    /** @var self $query */
                     $query->alias($alias);
                     if ($callback !== null) {
                         call_user_func($callback, $query);
@@ -486,7 +475,7 @@ class ActiveQuery extends Query implements ActiveQueryInterface
         $join = $this->join;
         $this->join = [];
 
-        /* @var $modelClass ActiveRecordInterface */
+        /** @var ActiveRecordInterface $modelClass */
         $modelClass = $this->modelClass;
         $model = $modelClass::instance();
         foreach ($this->joinWith as $config) {
@@ -581,7 +570,7 @@ class ActiveQuery extends Query implements ActiveQueryInterface
                 } else {
                     $relation = $relations[$fullName];
                 }
-                /* @var $relationModelClass ActiveRecordInterface */
+                /** @var ActiveRecordInterface $relationModelClass */
                 $relationModelClass = $relation->modelClass;
                 $primaryModel = $relationModelClass::instance();
                 $parent = $relation;
@@ -881,7 +870,7 @@ class ActiveQuery extends Query implements ActiveQueryInterface
      */
     protected function getPrimaryTableName()
     {
-        /* @var $modelClass ActiveRecord */
+        /** @var ActiveRecord $modelClass */
         $modelClass = $this->modelClass;
         return $modelClass::tableName();
     }
