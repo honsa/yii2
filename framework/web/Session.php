@@ -22,7 +22,7 @@ use yii\base\InvalidConfigException;
  *
  * Session can be used like an array to set and get session data. For example,
  *
- * ```php
+ * ```
  * $session = new Session;
  * $session->open();
  * $value1 = $session['name1'];  // get session variable 'name1'
@@ -260,7 +260,7 @@ class Session extends Component implements \IteratorAggregate, \ArrayAccess, \Co
             $request = Yii::$app->getRequest();
             if (!empty($_COOKIE[$name]) && ini_get('session.use_cookies')) {
                 $this->_hasSessionId = true;
-            } elseif (!ini_get('session.use_only_cookies') && ini_get('session.use_trans_sid')) {
+            } elseif (PHP_VERSION_ID < 80400 && !ini_get('session.use_only_cookies') && ini_get('session.use_trans_sid')) {
                 $this->_hasSessionId = $request->get($name) != '';
             } else {
                 $this->_hasSessionId = false;
@@ -392,7 +392,7 @@ class Session extends Component implements \IteratorAggregate, \ArrayAccess, \Co
      * Starting with Yii 2.0.21 `sameSite` is also supported. It requires PHP version 7.3.0 or higher.
      * For security, an exception will be thrown if `sameSite` is set while using an unsupported version of PHP.
      * To use this feature across different PHP versions check the version first. E.g.
-     * ```php
+     * ```
      * [
      *     'sameSite' => PHP_VERSION_ID >= 70300 ? yii\web\Cookie::SAME_SITE_LAX : null,
      * ]
@@ -439,7 +439,7 @@ class Session extends Component implements \IteratorAggregate, \ArrayAccess, \Co
     {
         if (ini_get('session.use_cookies') === '0') {
             return false;
-        } elseif (ini_get('session.use_only_cookies') === '1') {
+        } elseif (PHP_VERSION_ID >= 80400 || ini_get('session.use_only_cookies') === '1') {
             return true;
         }
 
@@ -462,13 +462,19 @@ class Session extends Component implements \IteratorAggregate, \ArrayAccess, \Co
         $this->freeze();
         if ($value === false) {
             ini_set('session.use_cookies', '0');
-            ini_set('session.use_only_cookies', '0');
+            if (PHP_VERSION_ID < 80400) {
+                ini_set('session.use_only_cookies', '0');
+            }
         } elseif ($value === true) {
             ini_set('session.use_cookies', '1');
-            ini_set('session.use_only_cookies', '1');
+            if (PHP_VERSION_ID < 80400) {
+                ini_set('session.use_only_cookies', '1');
+            }
         } else {
             ini_set('session.use_cookies', '1');
-            ini_set('session.use_only_cookies', '0');
+            if (PHP_VERSION_ID < 80400) {
+                ini_set('session.use_only_cookies', '0');
+            }
         }
         $this->unfreeze();
     }
@@ -503,7 +509,10 @@ class Session extends Component implements \IteratorAggregate, \ArrayAccess, \Co
      */
     public function getUseTransparentSessionID()
     {
-        return ini_get('session.use_trans_sid') == 1;
+        if (PHP_VERSION_ID < 80400) {
+            return ini_get('session.use_trans_sid') == 1;
+        }
+        return false;
     }
 
     /**
@@ -512,7 +521,9 @@ class Session extends Component implements \IteratorAggregate, \ArrayAccess, \Co
     public function setUseTransparentSessionID($value)
     {
         $this->freeze();
-        ini_set('session.use_trans_sid', $value ? '1' : '0');
+        if (PHP_VERSION_ID < 80400) {
+            ini_set('session.use_trans_sid', $value ? '1' : '0');
+        }
         $this->unfreeze();
     }
 
@@ -801,7 +812,7 @@ class Session extends Component implements \IteratorAggregate, \ArrayAccess, \Co
      *
      * You may use this method to display all the flash messages in a view file:
      *
-     * ```php
+     * ```
      * <?php
      * foreach (Yii::$app->session->getAllFlashes() as $key => $message) {
      *     echo '<div class="alert alert-' . $key . '">' . $message . '</div>';

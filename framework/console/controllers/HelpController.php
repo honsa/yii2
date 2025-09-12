@@ -77,7 +77,7 @@ class HelpController extends Controller
     {
         foreach ($this->getCommandDescriptions() as $command => $description) {
             $result = Yii::$app->createController($command);
-            /** @var $controller Controller */
+            /** @var Controller $controller */
             list($controller, $actionID) = $result;
             $actions = $this->getActions($controller);
             $prefix = $controller->getUniqueId();
@@ -300,7 +300,7 @@ class HelpController extends Controller
         $maxLength = 0;
         foreach ($commands as $command => $description) {
             $result = Yii::$app->createController($command);
-            /** @var $controller Controller */
+            /** @var Controller $controller */
             list($controller, $actionID) = $result;
             $actions = $this->getActions($controller);
             $prefix = $controller->getUniqueId();
@@ -432,9 +432,7 @@ class HelpController extends Controller
         ];
         ksort($options);
 
-        if (!empty($options)) {
-            $this->stdout(' [...options...]', Console::FG_RED);
-        }
+        $this->stdout(' [...options...]', Console::FG_RED);
         $this->stdout("\n\n");
 
         if (!empty($args)) {
@@ -449,21 +447,19 @@ class HelpController extends Controller
             }
         }
 
-        if (!empty($options)) {
-            $this->stdout("\nOPTIONS\n\n", Console::BOLD);
-            foreach ($options as $name => $option) {
-                $this->stdout($this->formatOptionHelp(
-                    $this->ansiFormat(
-                        '--' . $name . $this->formatOptionAliases($controller, $name),
-                        Console::FG_RED,
-                        empty($option['required']) ? Console::FG_RED : Console::BOLD
-                    ),
-                    !empty($option['required']),
-                    $option['type'],
-                    $option['default'],
-                    $option['comment']
-                ) . "\n\n");
-            }
+        $this->stdout("\nOPTIONS\n\n", Console::BOLD);
+        foreach ($options as $name => $option) {
+            $this->stdout($this->formatOptionHelp(
+                $this->ansiFormat(
+                    '--' . $name . $this->formatOptionAliases($controller, $name),
+                    Console::FG_RED,
+                    empty($option['required']) ? Console::FG_RED : Console::BOLD
+                ),
+                !empty($option['required']),
+                $option['type'],
+                $option['default'],
+                $option['comment']
+            ) . "\n\n");
         }
     }
 

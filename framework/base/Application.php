@@ -137,7 +137,7 @@ abstract class Application extends Module
      * @var array|null list of installed Yii extensions. Each array element represents a single extension
      * with the following structure:
      *
-     * ```php
+     * ```
      * [
      *     'name' => 'extension name',
      *     'version' => 'version number',
@@ -189,6 +189,9 @@ abstract class Application extends Module
      * @param array $config name-value pairs that will be used to initialize the object properties.
      * Note that the configuration must contain both [[id]] and [[basePath]].
      * @throws InvalidConfigException if either [[id]] or [[basePath]] configuration is missing.
+     *
+     * @phpstan-param array<string, mixed> $config
+     * @psalm-param array<string, mixed> $config
      */
     public function __construct($config = [])
     {
@@ -360,7 +363,6 @@ abstract class Application extends Module
      * Sets the root directory of the application and the @app alias.
      * This method can only be invoked at the beginning of the constructor.
      * @param string $path the root directory of the application.
-     * @property string the root directory of the application.
      * @throws InvalidArgumentException if the directory does not exist.
      */
     public function setBasePath($path)
