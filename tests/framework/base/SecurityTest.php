@@ -1,12 +1,16 @@
 <?php
+
 /**
  * @link https://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
  * @license https://www.yiiframework.com/license/
  */
 
+declare(strict_types=1);
+
 namespace yiiunit\framework\base;
 
+use yii\base\InvalidArgumentException;
 use yii\base\Security;
 use yiiunit\TestCase;
 
@@ -15,7 +19,7 @@ use yiiunit\TestCase;
  */
 class SecurityTest extends TestCase
 {
-    const CRYPT_VECTORS = 'old';
+    public const CRYPT_VECTORS = 'old';
 
     /**
      * @var ExposedSecurity
@@ -31,7 +35,7 @@ class SecurityTest extends TestCase
 
     // Tests :
 
-    public function testHashData()
+    public function testHashData(): void
     {
         $data = 'known data';
         $key = 'secret';
@@ -42,7 +46,7 @@ class SecurityTest extends TestCase
         $this->assertFalse($this->security->validateData($hashedData, $key));
     }
 
-    public function testPasswordHash()
+    public function testPasswordHash(): void
     {
         $this->security->passwordHashCost = 4;  // minimum blowfish's value is enough for tests
 
@@ -52,7 +56,7 @@ class SecurityTest extends TestCase
         $this->assertFalse($this->security->validatePassword('test', $hash));
     }
 
-    public function testEncryptByPassword()
+    public function testEncryptByPassword(): void
     {
         $data = 'known data';
         $key = 'secret';
@@ -68,7 +72,7 @@ class SecurityTest extends TestCase
         $this->assertFalse($decryptedData);
     }
 
-    public function testEncryptByKey()
+    public function testEncryptByKey(): void
     {
         $data = 'known data';
         $key = $this->security->generateRandomKey(80);
@@ -97,7 +101,7 @@ class SecurityTest extends TestCase
      * The output can then be used for testing compatibility of data encrypted in one
      * version of Yii and decrypted in another.
      */
-    public function notestGenerateVectors()
+    public function notestGenerateVectors(): void
     {
         $bin1024 =
             'badec0c7d9ca734e161a1df6ca4daa8cdbf6b3bbb60ec404b47a23226ec266b1
@@ -178,7 +182,7 @@ TEXT;
         }
     }
 
-    public function dataProviderEncryptByKeyCompat()
+    public static function dataProviderEncryptByKeyCompat(): array
     {
         // these ciphertexts generated using Yii 2.0.2 which is based on mcrypt.
         $mcrypt = [
@@ -480,7 +484,7 @@ TEXT;
      * @param string $data plaintext hex string
      * @param string $encrypted ciphertext hex string
      */
-    public function testEncryptByKeyCompat($key, $data, $encrypted)
+    public function testEncryptByKeyCompat($key, $data, $encrypted): void
     {
         $key = hex2bin(preg_replace('{\s+}', '', $key));
         $data = hex2bin(preg_replace('{\s+}', '', $data));
@@ -489,7 +493,7 @@ TEXT;
         $this->assertEquals($data, $this->security->decryptByKey($encrypted, $key));
     }
 
-    public function dataProviderEncryptByPasswordCompat()
+    public static function dataProviderEncryptByPasswordCompat(): array
     {
         // these ciphertexts generated using Yii 2.0.2 which is based on mcrypt.
         $mcrypt = [
@@ -791,7 +795,7 @@ TEXT;
      * @param string $data plaintext hex string
      * @param string $encrypted ciphertext hex string
      */
-    public function testEncryptByPasswordCompat($password, $data, $encrypted)
+    public function testEncryptByPasswordCompat($password, $data, $encrypted): void
     {
         $data = hex2bin(preg_replace('{\s+}', '', $data));
         $encrypted = hex2bin(preg_replace('{\s+}', '', $encrypted));
@@ -799,8 +803,7 @@ TEXT;
         $this->assertEquals($data, $this->security->decryptByPassword($encrypted, $password));
     }
 
-
-    public function randomKeyInvalidInputs()
+    public static function randomKeyInvalidInputs(): array
     {
         return [
             [0],
@@ -816,14 +819,14 @@ TEXT;
      *
      * @param int|string|array $input
      */
-    public function testRandomKeyInvalidInput($input)
+    public function testRandomKeyInvalidInput($input): void
     {
-        $this->expectException(\yii\base\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         $this->security->generateRandomKey($input);
     }
 
-    public function testGenerateRandomKey()
+    public function testGenerateRandomKey(): void
     {
         // test various string lengths
         for ($length = 1; $length < 64; $length++) {
@@ -862,7 +865,7 @@ TEXT;
         fwrite(STDERR, "$message: $count x $length B = $nbytes B in $milisec ms => $rate MB/s\n");
     }
 
-    public function testGenerateRandomString()
+    public function testGenerateRandomString(): void
     {
         $length = 21;
         $key = $this->security->generateRandomString($length);
@@ -870,7 +873,7 @@ TEXT;
         $this->assertEquals(1, preg_match('/[A-Za-z0-9_-]+/', $key));
     }
 
-    public function dataProviderPbkdf2()
+    public static function dataProviderPbkdf2(): array
     {
         return array_filter([
             [
@@ -958,14 +961,14 @@ TEXT;
      * @param int $length
      * @param string $okm
      */
-    public function testPbkdf2($hash, $password, $salt, $iterations, $length, $okm)
+    public function testPbkdf2($hash, $password, $salt, $iterations, $length, $okm): void
     {
         $this->security->derivationIterations = $iterations;
         $DK = $this->security->pbkdf2($hash, $password, $salt, $iterations, $length);
         $this->assertEquals($okm, bin2hex($DK));
     }
 
-    public function dataProviderDeriveKey()
+    public static function dataProviderDeriveKey(): array
     {
         // See Appendix A in https://tools.ietf.org/html/rfc5869
         return [
@@ -1046,18 +1049,19 @@ TEXT;
      * @param string $prk
      * @param string $okm
      */
-    public function testHkdf($hash, $ikm, $salt, $info, $l, $prk, $okm)
+    public function testHkdf($hash, $ikm, $salt, $info, $l, $prk, $okm): void
     {
         $dk = $this->security->hkdf(
             (string)$hash,
             hex2bin((string)$ikm),
             hex2bin((string)$salt),
             hex2bin((string)$info),
-            $l);
+            $l
+        );
         $this->assertEquals($okm, bin2hex($dk));
     }
 
-    public function dataProviderCompareStrings()
+    public static function dataProviderCompareStrings(): array
     {
         return [
             ['', ''],
@@ -1083,7 +1087,7 @@ TEXT;
      * @param $expected
      * @param $actual
      */
-    public function testCompareStrings($expected, $actual)
+    public function testCompareStrings($expected, $actual): void
     {
         $this->assertEquals(strcmp($expected, $actual) === 0, $this->security->compareString($expected, $actual));
     }
@@ -1092,22 +1096,22 @@ TEXT;
      * @dataProvider maskProvider
      * @param mixed $unmaskedToken
      */
-    public function testMasking($unmaskedToken)
+    public function testMasking($unmaskedToken): void
     {
         $maskedToken = $this->security->maskToken($unmaskedToken);
         $this->assertGreaterThan(mb_strlen($unmaskedToken, '8bit') * 2, mb_strlen($maskedToken, '8bit'));
         $this->assertEquals($unmaskedToken, $this->security->unmaskToken($maskedToken));
     }
 
-    public function testUnMaskingInvalidStrings()
+    public function testUnMaskingInvalidStrings(): void
     {
         $this->assertEquals('', $this->security->unmaskToken(''));
         $this->assertEquals('', $this->security->unmaskToken('1'));
     }
 
-    public function testMaskingInvalidStrings()
+    public function testMaskingInvalidStrings(): void
     {
-        $this->expectException(\yii\base\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('First parameter ($length) must be greater than 0');
 
         $this->security->maskToken('');
@@ -1116,7 +1120,7 @@ TEXT;
     /**
      * @return array
      */
-    public function maskProvider()
+    public static function maskProvider(): array
     {
         return [
             ['1'],

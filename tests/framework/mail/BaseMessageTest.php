@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @link https://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
@@ -7,6 +8,7 @@
 
 namespace yiiunit\framework\mail;
 
+use Exception;
 use Yii;
 use yii\mail\BaseMailer;
 use yii\mail\BaseMessage;
@@ -46,7 +48,7 @@ class BaseMessageTest extends TestCase
 
     // Tests :
 
-    public function testSend()
+    public function testSend(): void
     {
         $mailer = $this->getMailer();
         $message = $mailer->compose();
@@ -54,14 +56,14 @@ class BaseMessageTest extends TestCase
         $this->assertEquals($message, $mailer->sentMessages[0], 'Unable to send message!');
     }
 
-    public function testToString()
+    public function testToString(): void
     {
         $mailer = $this->getMailer();
         $message = $mailer->compose();
         $this->assertEquals($message->toString(), '' . $message);
     }
 
-    public function testExceptionToString()
+    public function testExceptionToString(): void
     {
         if (PHP_VERSION_ID < 70400) {
             $this->markTestSkipped('This test is for PHP 7.4+ only');
@@ -69,13 +71,13 @@ class BaseMessageTest extends TestCase
 
         $message = new TestMessageWithException();
 
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage('Test exception in toString.');
 
         (string) $message;
     }
 
-    public function testExceptionToStringLegacy()
+    public function testExceptionToStringLegacy(): void
     {
         if (PHP_VERSION_ID >= 70400) {
             $this->markTestSkipped('This test is for PHP < 7.4 only');
@@ -195,12 +197,12 @@ class TestMessage extends BaseMessage
     {
     }
 
-    public function setTextBody($text)
+    public function setTextBody($text): void
     {
         $this->text = $text;
     }
 
-    public function setHtmlBody($html)
+    public function setHtmlBody($html): void
     {
         $this->html = $html;
     }
@@ -231,6 +233,6 @@ class TestMessageWithException extends TestMessage
 {
     public function toString()
     {
-        throw new \Exception('Test exception in toString.');
+        throw new Exception('Test exception in toString.');
     }
 }

@@ -52,7 +52,10 @@ class Controller extends \yii\base\Controller
      */
     public function renderAjax($view, $params = [])
     {
-        return $this->getView()->renderAjax($view, $params, $this);
+        /** @var View */
+        $viewComponent = $this->getView();
+
+        return $viewComponent->renderAjax($view, $params, $this);
     }
 
     /**
@@ -200,7 +203,9 @@ class Controller extends \yii\base\Controller
      * if the function parameter has a single named type.
      * @param mixed $param The parameter value.
      * @param \ReflectionNamedType $type
-     * @return array{0: mixed, 1: bool} The resulting parameter value and a boolean indicating whether the value is valid.
+     * @return array The resulting parameter value and a boolean indicating whether the value is valid.
+     *
+     * @phpstan-return array{mixed, bool}
      */
     private function filterSingleTypeActionParam($param, $type)
     {
@@ -245,7 +250,9 @@ class Controller extends \yii\base\Controller
      * if the function parameter has a union type.
      * @param mixed $param The parameter value.
      * @param \ReflectionUnionType $type
-     * @return array{0: mixed, 1: bool} The resulting parameter value and a boolean indicating whether the value is valid.
+     * @return array The resulting parameter value and a boolean indicating whether the value is valid.
+     *
+     * @phpstan-return array{mixed, bool}
      */
     private function filterUnionTypeActionParam($param, $type)
     {

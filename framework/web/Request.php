@@ -87,19 +87,18 @@ use yii\validators\IpValidator;
  *
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
- * @SuppressWarnings(PHPMD.SuperGlobals)
  */
 class Request extends \yii\base\Request
 {
     /**
      * Default name of the HTTP header for sending CSRF token.
      */
-    const CSRF_HEADER = 'X-CSRF-Token';
+    public const CSRF_HEADER = 'X-CSRF-Token';
     /**
      * The length of the CSRF token mask.
      * @deprecated since 2.0.12. The mask length is now equal to the token length.
      */
-    const CSRF_MASK_LENGTH = 8;
+    public const CSRF_MASK_LENGTH = 8;
 
     /**
      * @var bool whether to enable CSRF (Cross-Site Request Forgery) validation. Defaults to true.
@@ -1174,7 +1173,7 @@ class Request extends \yii\base\Request
             if ($this->headers->has($portHeader)) {
                 $port = $this->headers->get($portHeader);
                 if ($port !== null) {
-                    return $port;
+                    return (int) $port;
                 }
             }
         }

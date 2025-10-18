@@ -46,8 +46,8 @@ use yii\base\InvalidConfigException;
  * For more details and usage information on Session, see the [guide article on sessions](guide:runtime-sessions-cookies).
  *
  * @property-read array $allFlashes Flash messages (key => message or key => [message1, message2]).
- * @property-read string $cacheLimiter Current cache limiter.
- * @property-read array $cookieParams The session cookie parameters.
+ * @property string $cacheLimiter Current cache limiter.
+ * @property array $cookieParams The session cookie parameters.
  * @property-read int $count The number of session variables.
  * @property-write string $flash The key identifying the flash message. Note that flash messages and normal
  * session variables share the same name space. If you have a normal session variable using the same name, its
@@ -484,7 +484,13 @@ class Session extends Component implements \IteratorAggregate, \ArrayAccess, \Co
      */
     public function getGCProbability()
     {
-        return (float) (ini_get('session.gc_probability') / ini_get('session.gc_divisor') * 100);
+        /** @phpstan-var numeric-string|false */
+        $gcProbability = ini_get('session.gc_probability');
+
+        /** @phpstan-var numeric-string|false */
+        $gcDivisor = ini_get('session.gc_divisor');
+
+        return (float) ($gcProbability / $gcDivisor * 100);
     }
 
     /**

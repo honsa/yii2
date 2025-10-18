@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @link https://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
@@ -26,7 +27,7 @@ class ActiveRecordTest extends \yiiunit\framework\db\ActiveRecordTest
 {
     protected $driverName = 'pgsql';
 
-    public function testBooleanAttribute()
+    public function testBooleanAttribute(): void
     {
         /** @var TestCase|ActiveRecordTestTrait $this */
 
@@ -54,7 +55,7 @@ class ActiveRecordTest extends \yiiunit\framework\db\ActiveRecordTest
         $this->assertCount(1, $customers);
     }
 
-    public function testFindAsArray()
+    public function testFindAsArray(): void
     {
         /** @var ActiveRecordInterface $customerClass */
         $customerClass = $this->getCustomerClass();
@@ -94,12 +95,14 @@ class ActiveRecordTest extends \yiiunit\framework\db\ActiveRecordTest
         $this->assertArrayHasKey('bool_status', $customers[2]);
     }
 
-    public function testBooleanValues()
+    public function testBooleanValues(): void
     {
         $db = $this->getConnection();
         $command = $db->createCommand();
-        $command->batchInsert('bool_values',
-            ['bool_col'], [
+        $command->batchInsert(
+            'bool_values',
+            ['bool_col'],
+            [
                 [true],
                 [false],
             ]
@@ -123,7 +126,7 @@ class ActiveRecordTest extends \yiiunit\framework\db\ActiveRecordTest
     /**
      * @see https://github.com/yiisoft/yii2/issues/4672
      */
-    public function testBooleanValues2()
+    public function testBooleanValues2(): void
     {
         $db = $this->getConnection();
         $db->charset = 'utf8';
@@ -156,7 +159,7 @@ class ActiveRecordTest extends \yiiunit\framework\db\ActiveRecordTest
         $this->assertCount(1, UserAR::find()->where(['is_deleted' => [true, false]])->all($db));
     }
 
-    public function testBooleanDefaultValues()
+    public function testBooleanDefaultValues(): void
     {
         $model = new BoolAR();
         $this->assertNull($model->bool_col);
@@ -170,7 +173,7 @@ class ActiveRecordTest extends \yiiunit\framework\db\ActiveRecordTest
         $this->assertTrue($model->save(false));
     }
 
-    public function testPrimaryKeyAfterSave()
+    public function testPrimaryKeyAfterSave(): void
     {
         $record = new DefaultPk();
         $record->type = 'type';
@@ -181,7 +184,7 @@ class ActiveRecordTest extends \yiiunit\framework\db\ActiveRecordTest
     /**
      * @dataProvider arrayValuesProvider $attributes
      */
-    public function testArrayValues($attributes)
+    public function testArrayValues($attributes): void
     {
         $type = new ArrayAndJsonTypes();
         foreach ($attributes as $attribute => $expected) {
@@ -315,9 +318,9 @@ class BoolAR extends ActiveRecord
 
 class UserAR extends ActiveRecord
 {
-    const STATUS_DELETED = 0;
-    const STATUS_ACTIVE = 10;
-    const ROLE_USER = 10;
+    public const STATUS_DELETED = 0;
+    public const STATUS_ACTIVE = 10;
+    public const ROLE_USER = 10;
 
     public static function tableName()
     {
@@ -327,7 +330,7 @@ class UserAR extends ActiveRecord
     public function behaviors()
     {
         return [
-            TimestampBehavior::className(),
+            TimestampBehavior::class,
         ];
     }
 }

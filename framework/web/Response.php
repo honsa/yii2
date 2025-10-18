@@ -64,21 +64,21 @@ class Response extends \yii\base\Response
     /**
      * @event \yii\base\Event an event that is triggered at the beginning of [[send()]].
      */
-    const EVENT_BEFORE_SEND = 'beforeSend';
+    public const EVENT_BEFORE_SEND = 'beforeSend';
     /**
      * @event \yii\base\Event an event that is triggered at the end of [[send()]].
      */
-    const EVENT_AFTER_SEND = 'afterSend';
+    public const EVENT_AFTER_SEND = 'afterSend';
     /**
      * @event \yii\base\Event an event that is triggered right after [[prepare()]] is called in [[send()]].
      * You may respond to this event to filter the response content before it is sent to the client.
      */
-    const EVENT_AFTER_PREPARE = 'afterPrepare';
-    const FORMAT_RAW = 'raw';
-    const FORMAT_HTML = 'html';
-    const FORMAT_JSON = 'json';
-    const FORMAT_JSONP = 'jsonp';
-    const FORMAT_XML = 'xml';
+    public const EVENT_AFTER_PREPARE = 'afterPrepare';
+    public const FORMAT_RAW = 'raw';
+    public const FORMAT_HTML = 'html';
+    public const FORMAT_JSON = 'json';
+    public const FORMAT_JSONP = 'jsonp';
+    public const FORMAT_XML = 'xml';
 
     /**
      * @var string the response format. This determines how to convert [[data]] into [[content]]
@@ -103,7 +103,7 @@ class Response extends \yii\base\Response
      */
     public $format = self::FORMAT_HTML;
     /**
-     * @var string the MIME type (e.g. `application/json`) from the request ACCEPT header chosen for this response.
+     * @var string|null the MIME type (e.g. `application/json`) from the request ACCEPT header chosen for this response.
      * This property is mainly set by [[\yii\filters\ContentNegotiator]].
      */
     public $acceptMimeType;
@@ -134,7 +134,7 @@ class Response extends \yii\base\Response
      */
     public $content;
     /**
-     * @var resource|array|callable the stream to be sent. This can be a stream handle or an array of stream handle,
+     * @var resource|array|callable|null the stream to be sent. This can be a stream handle or an array of stream handle,
      * the begin position and the end position. Alternatively it can be set to a callable, which returns
      * (or [yields](https://www.php.net/manual/en/language.generators.syntax.php)) an array of strings that should
      * be echoed and flushed out one by one.
@@ -239,7 +239,7 @@ class Response extends \yii\base\Response
      */
     private $_statusCode = 200;
     /**
-     * @var HeaderCollection
+     * @var HeaderCollection|null
      */
     private $_headers;
 
@@ -946,6 +946,9 @@ class Response extends \yii\base\Response
         return $this->redirect(Yii::$app->getRequest()->getUrl() . $anchor);
     }
 
+    /**
+     * @var CookieCollection|null
+     */
     private $_cookies;
 
     /**

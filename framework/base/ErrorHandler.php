@@ -30,7 +30,7 @@ abstract class ErrorHandler extends Component
      * @event Event an event that is triggered when the handler is called by shutdown function via [[handleFatalError()]].
      * @since 2.0.46
      */
-    const EVENT_SHUTDOWN = 'shutdown';
+    public const EVENT_SHUTDOWN = 'shutdown';
 
     /**
      * @var bool whether to discard any existing page output before error display. Defaults to true.
@@ -55,7 +55,7 @@ abstract class ErrorHandler extends Component
     public $silentExitOnException;
 
     /**
-     * @var string Used to reserve memory for fatal error handler.
+     * @var string|null Used to reserve memory for fatal error handler.
      */
     private $_memoryReserve;
     /**
@@ -67,7 +67,7 @@ abstract class ErrorHandler extends Component
      */
     private $_registered = false;
     /**
-     * @var string the current working directory
+     * @var string|null the current working directory
      */
     private $_workingDirectory;
 

@@ -137,19 +137,19 @@ class Connection extends Component
     /**
      * @event \yii\base\Event an event that is triggered after a DB connection is established
      */
-    const EVENT_AFTER_OPEN = 'afterOpen';
+    public const EVENT_AFTER_OPEN = 'afterOpen';
     /**
      * @event \yii\base\Event an event that is triggered right before a top-level transaction is started
      */
-    const EVENT_BEGIN_TRANSACTION = 'beginTransaction';
+    public const EVENT_BEGIN_TRANSACTION = 'beginTransaction';
     /**
      * @event \yii\base\Event an event that is triggered right after a top-level transaction is committed
      */
-    const EVENT_COMMIT_TRANSACTION = 'commitTransaction';
+    public const EVENT_COMMIT_TRANSACTION = 'commitTransaction';
     /**
      * @event \yii\base\Event an event that is triggered right after a top-level transaction is rolled back
      */
-    const EVENT_ROLLBACK_TRANSACTION = 'rollbackTransaction';
+    public const EVENT_ROLLBACK_TRANSACTION = 'rollbackTransaction';
 
     /**
      * @var string the Data Source Name, or DSN, contains the information required to connect to the database.
@@ -431,15 +431,15 @@ class Connection extends Component
      */
     private $_queryBuilderConfigurations = [];
     /**
-     * @var Transaction the currently active transaction
+     * @var Transaction|null the currently active transaction
      */
     private $_transaction;
     /**
-     * @var Schema the database schema
+     * @var Schema|null the database schema
      */
     private $_schema;
     /**
-     * @var string driver name
+     * @var string|null driver name
      */
     private $_driverName;
     /**
@@ -455,11 +455,11 @@ class Connection extends Component
      */
     private $_queryCacheInfo = [];
     /**
-     * @var string[] quoted table name cache for [[quoteTableName()]] calls
+     * @var string[]|null quoted table name cache for [[quoteTableName()]] calls
      */
     private $_quotedTableNames;
     /**
-     * @var string[] quoted column name cache for [[quoteColumnName()]] calls
+     * @var string[]|null quoted column name cache for [[quoteColumnName()]] calls
      */
     private $_quotedColumnNames;
 

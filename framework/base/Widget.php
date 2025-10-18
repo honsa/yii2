@@ -30,18 +30,18 @@ class Widget extends Component implements ViewContextInterface
      * @event Event an event that is triggered when the widget is initialized via [[init()]].
      * @since 2.0.11
      */
-    const EVENT_INIT = 'init';
+    public const EVENT_INIT = 'init';
     /**
      * @event WidgetEvent an event raised right before executing a widget.
      * You may set [[WidgetEvent::isValid]] to be false to cancel the widget execution.
      * @since 2.0.11
      */
-    const EVENT_BEFORE_RUN = 'beforeRun';
+    public const EVENT_BEFORE_RUN = 'beforeRun';
     /**
      * @event WidgetEvent an event raised right after executing a widget.
      * @since 2.0.11
      */
-    const EVENT_AFTER_RUN = 'afterRun';
+    public const EVENT_AFTER_RUN = 'afterRun';
 
     /**
      * @var int a counter used to generate [[id]] for widgets.
@@ -90,7 +90,7 @@ class Widget extends Component implements ViewContextInterface
     public static function begin($config = [])
     {
         $config['class'] = get_called_class();
-        /** @var self $widget */
+        /** @var static $widget */
         $widget = Yii::createObject($config);
         self::$stack[] = $widget;
         self::$_resolvedClasses[get_called_class()] = get_class($widget);
@@ -113,7 +113,7 @@ class Widget extends Component implements ViewContextInterface
             $calledClass = self::$_resolvedClasses[get_called_class()] ?? get_called_class();
 
             if (get_class($widget) === $calledClass) {
-                /** @var self $widget */
+                /** @var static $widget */
                 if ($widget->beforeRun()) {
                     $result = $widget->run();
                     $result = $widget->afterRun($result);
