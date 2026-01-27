@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @link https://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
@@ -401,10 +402,7 @@ SQL;
      * Creates ColumnSchema instance.
      *
      * @param array $column
-     * @return ColumnSchema
-     *
-     * @phpstan-return T
-     * @psalm-return T
+     * @return T
      */
     protected function createColumn($column)
     {

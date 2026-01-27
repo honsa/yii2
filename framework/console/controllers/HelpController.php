@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @link https://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
@@ -9,11 +10,13 @@ namespace yii\console\controllers;
 
 use Yii;
 use yii\base\Application;
+use yii\base\Module;
 use yii\console\Controller;
 use yii\console\Exception;
 use yii\console\ExitCode;
 use yii\helpers\Console;
 use yii\helpers\Inflector;
+use yii\console\Application as ConsoleApplication;
 
 /**
  * Provides help information about console commands.
@@ -35,6 +38,9 @@ use yii\helpers\Inflector;
  *
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
+ *
+ * @template T of ConsoleApplication
+ * @extends Controller<T>
  */
 class HelpController extends Controller
 {
@@ -80,7 +86,7 @@ class HelpController extends Controller
     {
         foreach ($this->getCommandDescriptions() as $command => $description) {
             $result = Yii::$app->createController($command);
-            /** @var Controller $controller */
+            /** @var Controller<Application> $controller */
             list($controller, $actionID) = $result;
             $actions = $this->getActions($controller);
             $prefix = $controller->getUniqueId();
@@ -108,7 +114,7 @@ class HelpController extends Controller
             return;
         }
 
-        /** @var Controller $controller */
+        /** @var Controller<Application> $controller */
         list($controller, $actionID) = $result;
         $action = $controller->createAction($actionID);
         if ($action === null) {
@@ -141,7 +147,7 @@ class HelpController extends Controller
             return;
         }
 
-        /** @var Controller $controller */
+        /** @var Controller<Application> $controller */
         list($controller, $actionID) = $result;
         $action = $controller->createAction($actionID);
         if ($action === null) {
@@ -179,6 +185,7 @@ class HelpController extends Controller
             if ($result === false || !$result[0] instanceof Controller) {
                 return false;
             }
+            /** @var Controller<Application> $controller */
             list($controller, $actionID) = $result;
             $actions = $this->getActions($controller);
             return $actions !== [];
@@ -194,7 +201,7 @@ class HelpController extends Controller
         $descriptions = [];
         foreach ($this->getCommands() as $command) {
             $result = Yii::$app->createController($command);
-            /** @var Controller $controller */
+            /** @var Controller<Application> $controller */
             list($controller, $actionID) = $result;
             $descriptions[$command] = $controller->getHelpSummary();
         }
@@ -204,7 +211,7 @@ class HelpController extends Controller
 
     /**
      * Returns all available actions of the specified controller.
-     * @param Controller $controller the controller instance
+     * @param Controller<Module> $controller the controller instance
      * @return array all available action IDs.
      */
     public function getActions($controller)
@@ -224,7 +231,7 @@ class HelpController extends Controller
 
     /**
      * Returns available commands of a specified module.
-     * @param \yii\base\Module $module the module instance
+     * @param Module $module the module instance
      * @return array the available command names
      */
     protected function getModuleCommands($module)
@@ -303,7 +310,7 @@ class HelpController extends Controller
         $maxLength = 0;
         foreach ($commands as $command => $description) {
             $result = Yii::$app->createController($command);
-            /** @var Controller $controller */
+            /** @var Controller<Application> $controller */
             list($controller, $actionID) = $result;
             $actions = $this->getActions($controller);
             $prefix = $controller->getUniqueId();
@@ -317,6 +324,7 @@ class HelpController extends Controller
         }
         foreach ($commands as $command => $description) {
             $result = Yii::$app->createController($command);
+            /** @var Controller<Application> $controller */
             list($controller, $actionID) = $result;
             $actions = $this->getActions($controller);
             $this->stdout('- ' . $this->ansiFormat($command, Console::FG_YELLOW));
@@ -348,7 +356,7 @@ class HelpController extends Controller
 
     /**
      * Displays the overall information of the command.
-     * @param Controller $controller the controller instance
+     * @param Controller<Module> $controller the controller instance
      */
     protected function getCommandHelp($controller)
     {
@@ -392,7 +400,7 @@ class HelpController extends Controller
 
     /**
      * Displays the detailed information of a command action.
-     * @param Controller $controller the controller instance
+     * @param Controller<Module> $controller the controller instance
      * @param string $actionID action ID
      * @throws Exception if the action does not exist
      */
@@ -513,7 +521,7 @@ class HelpController extends Controller
     }
 
     /**
-     * @param Controller $controller the controller instance
+     * @param Controller<Module> $controller the controller instance
      * @param string $option the option name
      * @return string the formatted string for the alias argument or option
      * @since 2.0.8

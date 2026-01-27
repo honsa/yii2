@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @link https://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
@@ -9,7 +10,11 @@ namespace yii\filters;
 
 use Closure;
 use Yii;
+use yii\base\Action;
 use yii\base\ActionFilter;
+use yii\base\Component;
+use yii\base\Controller;
+use yii\base\Module;
 use yii\web\IdentityInterface;
 use yii\web\Request;
 use yii\web\Response;
@@ -38,6 +43,9 @@ use yii\web\TooManyRequestsHttpException;
  *
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
+ *
+ * @template T of Component
+ * @extends ActionFilter<T>
  */
 class RateLimiter extends ActionFilter
 {
@@ -113,7 +121,7 @@ class RateLimiter extends ActionFilter
      * @param RateLimitInterface $user the current user
      * @param Request $request
      * @param Response $response
-     * @param \yii\base\Action $action the action to be executed
+     * @param Action<Controller<Module>> $action the action to be executed
      * @throws TooManyRequestsHttpException if rate limit exceeds
      */
     public function checkRateLimit($user, $request, $response, $action)

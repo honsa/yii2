@@ -56,11 +56,6 @@ parameters:
 			path: framework/grid/DataColumn.php
 
 		-
-			message: "#^Call to an undefined method yii\\\\db\\\\Schema\\:\\:getViewNames\\(\\)\\.$#"
-			count: 1
-			path: framework/db/pgsql/QueryBuilder.php
-
-		-
 			message: "#^Call to an undefined method yii\\\\db\\\\ExpressionInterface\\:\\:getValue\\(\\)\\.$#"
 			count: 1
 			path: framework/db/pgsql/JsonExpressionBuilder.php
@@ -84,11 +79,6 @@ parameters:
 			message: "#^Call to an undefined method yii\\\\db\\\\ExpressionInterface\\:\\:getValue\\(\\)\\.$#"
 			count: 1
 			path: framework/db/mysql/JsonExpressionBuilder.php
-
-		-
-			message: "#^Call to an undefined method yii\\\\db\\\\Schema\\:\\:getViewNames\\(\\)\\.$#"
-			count: 1
-			path: framework/db/mssql/QueryBuilder.php
 
 		-
 			message: "#^Access to an undefined property yii\\\\db\\\\ColumnSchema\\:\\:\\$isComputed\\.$#"
@@ -361,26 +351,56 @@ parameters:
 			path: framework/console/Controller.php
 
 		-
-			message: "#^Call to an undefined method yii\\\\base\\\\Component\\:\\:isAttributeChanged\\(\\)\\.$#"
-			count: 1
-			path: framework/behaviors/SluggableBehavior.php
-
-		-
-			message: "#^Call to an undefined method yii\\\\base\\\\Component\\:\\:formName\\(\\)\\.$#"
-			count: 1
-			path: framework/behaviors/OptimisticLockBehavior.php
-
-		-
-			message: "#^Access to an undefined property yii\\\\base\\\\Component\\:\\:\\$view\\.$#"
-			count: 2
-			path: framework/behaviors/CacheableWidgetBehavior.php
-
-		-
-			message: "#^Call to an undefined method yii\\\\base\\\\Model\\:\\:canSetOldAttribute\\(\\)\\.$#"
+			message: "#^Call to an undefined method T of yii\\\\base\\\\Model\\:\\:canSetOldAttribute\\(\\)\\.$#"
 			count: 1
 			path: framework/behaviors/AttributeTypecastBehavior.php
 
 		-
-			message: "#^Call to an undefined method yii\\\\base\\\\Model\\:\\:setOldAttribute\\(\\)\\.$#"
+			message: "#^Call to an undefined method T of yii\\\\base\\\\Model\\:\\:setOldAttribute\\(\\)\\.$#"
 			count: 1
 			path: framework/behaviors/AttributeTypecastBehavior.php
+
+		-
+			message: "#^Method yii\\\\helpers\\\\BaseFileHelper\\:\\:filterPath\\(\\) should return bool but returns int\\<0\\, 16\\>\\.$#"
+			count: 1
+			path: framework/helpers/BaseFileHelper.php
+
+		-
+			message: "#^Parameter \\&\\$length by\\-ref type of method yii\\\\db\\\\sqlite\\\\SqlTokenizer\\:\\:isOperator\\(\\) expects int\\, int\\|null given\\.$#"
+			count: 1
+			path: framework/db/sqlite/SqlTokenizer.php
+
+		-
+			message: "#^Method yii\\\\db\\\\BaseActiveRecord\\:\\:findOne\\(\\) should return static\\(yii\\\\db\\\\BaseActiveRecord\\)\\|null but returns array\\|yii\\\\db\\\\ActiveRecordInterface\\|null\\.$#"
+			count: 1
+			path: framework/db/BaseActiveRecord.php
+
+		-
+			message: "#^Property yii\\\\db\\\\ActiveQuery\\<yii\\\\db\\\\ActiveRecord\\>\\:\\:\\$primaryModel \\(yii\\\\db\\\\ActiveRecord\\) does not accept \\$this\\(yii\\\\db\\\\BaseActiveRecord\\)\\.$#"
+			count: 1
+			path: framework/db/BaseActiveRecord.php
+
+		-
+			message: "#^Parameter \\&\\$models by\\-ref type of method yii\\\\db\\\\ActiveQuery\\:\\:findWith\\(\\) expects array\\<yii\\\\db\\\\ActiveRecord\\>\\, array given\\.$#"
+			count: 1
+			path: framework/db/ActiveQueryTrait.php
+
+		-
+			message: "#^Method yii\\\\captcha\\\\CaptchaAction\\:\\:generateValidationHash\\(\\) should return string but returns int\\.$#"
+			count: 1
+			path: framework/captcha/CaptchaAction.php
+
+		-
+			message: "#^Method yii\\\\caching\\\\WinCache\\:\\:setValues\\(\\) should return array but returns bool\\.$#"
+			count: 1
+			path: framework/caching/WinCache.php
+
+		-
+			message: "#^Method yii\\\\caching\\\\WinCache\\:\\:addValues\\(\\) should return array but returns bool\\.$#"
+			count: 1
+			path: framework/caching/WinCache.php
+
+		-
+			message: "#^Argument of an invalid type static\\(yii\\\\caching\\\\Dependency\\) supplied for foreach\\, only iterables are supported\\.$#"
+			count: 1
+			path: framework/caching/Dependency.php

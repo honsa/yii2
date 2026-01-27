@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @link https://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
@@ -280,10 +281,12 @@ class QueryBuilder extends \yii\db\QueryBuilder
      */
     public function checkIntegrity($check = true, $schema = '', $table = '')
     {
+        /** @var Schema<ColumnSchema> */
+        $dbSchema = $this->db->getSchema();
         $enable = $check ? 'CHECK' : 'NOCHECK';
-        $schema = $schema ?: $this->db->getSchema()->defaultSchema;
-        $tableNames = $this->db->getTableSchema($table) ? [$table] : $this->db->getSchema()->getTableNames($schema);
-        $viewNames = $this->db->getSchema()->getViewNames($schema);
+        $schema = $schema ?: $dbSchema->defaultSchema;
+        $tableNames = $this->db->getTableSchema($table) ? [$table] : $dbSchema->getTableNames($schema);
+        $viewNames = $dbSchema->getViewNames($schema);
         $tableNames = array_diff($tableNames, $viewNames);
         $command = '';
 

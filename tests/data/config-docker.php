@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @link https://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
@@ -30,7 +31,7 @@ $config = [
         'mysql' => [
             'dsn' => 'mysql:host=mysql;dbname=yiitest',
             'username' => 'root',
-            'password' => 'secret',
+            'password' => 'root',
             'fixture' => __DIR__ . '/mysql.sql',
         ],
         'sqlite' => [
@@ -38,9 +39,9 @@ $config = [
             'fixture' => __DIR__ . '/sqlite.sql',
         ],
         'sqlsrv' => [
-            'dsn' => 'sqlsrv:Server=mssql;Database=yii2test',
-            'username' => 'sa',
-            'password' => 'Microsoft-12345',
+            'dsn' => 'sqlsrv:Server=mssql;Database=yiitest;TrustServerCertificate=true;',
+            'username' => 'SA',
+            'password' => 'YourStrong!Passw0rd',
             'fixture' => __DIR__ . '/mssql.sql',
         ],
         'pgsql' => [

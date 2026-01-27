@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @link https://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
@@ -93,10 +94,13 @@ use yii\helpers\StringHelper;
  *
  * For more details and usage information on Component, see the [guide article on components](guide:concept-components).
  *
- * @property-read Behavior[] $behaviors List of behaviors attached to this component.
+ * @property-read Behavior<$this>[] $behaviors List of behaviors attached to this component.
  *
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
+ *
+ * @phpstan-property-read Behavior<$this>[] $behaviors
+ * @psalm-property-read Behavior<self>[] $behaviors
  */
 class Component extends BaseObject
 {
@@ -110,7 +114,7 @@ class Component extends BaseObject
      */
     private $_eventWildcards = [];
     /**
-     * @var Behavior[]|null the attached behaviors (behavior name => behavior). This is `null` when not initialized.
+     * @var Behavior<$this>[]|null the attached behaviors (behavior name => behavior). This is `null` when not initialized.
      */
     private $_behaviors;
 
@@ -460,10 +464,7 @@ class Component extends BaseObject
      *
      * Behaviors declared in this method will be attached to the component automatically (on demand).
      *
-     * @return array the behavior configurations.
-     *
-     * @phpstan-return array<array-key, class-string|array{class: class-string, ...}>
-     * @psalm-return array<array-key, class-string|array{class: class-string, ...}>
+     * @return array<array-key, class-string|array{class: class-string, ...}> the behavior configurations.
      */
     public function behaviors()
     {
@@ -660,7 +661,10 @@ class Component extends BaseObject
     /**
      * Returns the named behavior object.
      * @param string $name the behavior name
-     * @return Behavior|null the behavior object, or null if the behavior does not exist
+     * @return Behavior<$this>|null the behavior object, or null if the behavior does not exist
+     *
+     * @phpstan-return Behavior<$this>|null
+     * @psalm-return Behavior<self>|null
      */
     public function getBehavior($name)
     {
@@ -670,7 +674,10 @@ class Component extends BaseObject
 
     /**
      * Returns all behaviors attached to this component.
-     * @return Behavior[] list of behaviors attached to this component
+     * @return Behavior<$this>[] list of behaviors attached to this component
+     *
+     * @phpstan-return Behavior<$this>[]
+     * @psalm-return Behavior<self>[]
      */
     public function getBehaviors()
     {
@@ -684,14 +691,20 @@ class Component extends BaseObject
      * configuration. After that, the behavior object will be attached to
      * this component by calling the [[Behavior::attach()]] method.
      * @param string $name the name of the behavior.
-     * @param string|array|Behavior $behavior the behavior configuration. This can be one of the following:
+     * @param string|array|Behavior<$this> $behavior the behavior configuration. This can be one of the following:
      *
      *  - a [[Behavior]] object
      *  - a string specifying the behavior class
      *  - an object configuration array that will be passed to [[Yii::createObject()]] to create the behavior object.
      *
-     * @return Behavior the behavior object
+     * @return Behavior<$this> the behavior object
      * @see detachBehavior()
+     *
+     * @phpstan-param string|array|Behavior<$this> $behavior
+     * @psalm-param string|array|Behavior<self> $behavior
+     *
+     * @phpstan-return Behavior<$this>
+     * @psalm-return Behavior<self>
      */
     public function attachBehavior($name, $behavior)
     {
@@ -718,7 +731,10 @@ class Component extends BaseObject
      * Detaches a behavior from the component.
      * The behavior's [[Behavior::detach()]] method will be invoked.
      * @param string $name the behavior's name.
-     * @return Behavior|null the detached behavior. Null if the behavior does not exist.
+     * @return Behavior<$this>|null the detached behavior. Null if the behavior does not exist.
+     *
+     * @phpstan-return Behavior<$this>|null
+     * @psalm-return Behavior<self>|null
      */
     public function detachBehavior($name)
     {
@@ -762,8 +778,8 @@ class Component extends BaseObject
      * @param string|int $name the name of the behavior. If this is an integer, it means the behavior
      * is an anonymous one. Otherwise, the behavior is a named one and any existing behavior with the same name
      * will be detached first.
-     * @param string|array|Behavior $behavior the behavior to be attached
-     * @return Behavior the attached behavior.
+     * @param string|array|Behavior<$this> $behavior the behavior to be attached
+     * @return Behavior<$this> the attached behavior.
      */
     private function attachBehaviorInternal($name, $behavior)
     {

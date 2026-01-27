@@ -9,6 +9,7 @@
 namespace yii\build\controllers;
 
 use Yii;
+use yii\console\Application;
 use yii\console\Controller;
 use yii\helpers\Console;
 use yii\helpers\VarDumper;
@@ -24,6 +25,8 @@ use yii\helpers\VarDumper;
  *
  * @author Carsten Brandt <mail@cebe.cc>
  * @since 2.0
+ *
+ * @extends Controller<Application>
  */
 class MimeTypeController extends Controller
 {
@@ -130,7 +133,7 @@ class MimeTypeController extends Controller
 
 # fix for bundled libmagic bug, see also https://github.com/yiisoft/yii2/issues/19925
 if ((PHP_VERSION_ID >= 80100 && PHP_VERSION_ID < 80122) || (PHP_VERSION_ID >= 80200 && PHP_VERSION_ID < 80209)) {
-    \$mimeTypes = array_replace(\$mimeTypes, array('xz' => 'application/octet-stream'));
+    \$mimeTypes = array_replace(\$mimeTypes, ['xz' => 'application/octet-stream']);
 }
 
 return \$mimeTypes;

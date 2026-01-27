@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @link https://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
@@ -21,17 +22,11 @@ namespace yii\base;
  * @since 2.0
  *
  * @template T of Component
- *
- * @phpstan-property T|null $owner
- * @psalm-property T|null $owner
  */
 class Behavior extends BaseObject
 {
     /**
-     * @var Component|null the owner of this behavior
-     *
-     * @phpstan-var T|null
-     * @psalm-var T|null
+     * @var T|null the owner of this behavior
      */
     public $owner;
 
@@ -79,7 +74,7 @@ class Behavior extends BaseObject
      * The default implementation will set the [[owner]] property
      * and attach event handlers as declared in [[events]].
      * Make sure you call the parent implementation if you override this method.
-     * @param Component $owner the component that this behavior is to be attached to.
+     * @param T $owner the component that this behavior is to be attached to.
      */
     public function attach($owner)
     {

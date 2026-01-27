@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @link https://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
@@ -285,10 +286,7 @@ SQL;
     /**
      * Loads the column information into a [[ColumnSchema]] object.
      * @param array $info column information
-     * @return ColumnSchema the column schema object
-     *
-     * @phpstan-return T
-     * @psalm-return T
+     * @return T the column schema object
      */
     protected function loadColumnSchema($info)
     {
