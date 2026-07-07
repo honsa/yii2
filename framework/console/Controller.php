@@ -34,6 +34,7 @@ use yii\base\Module;
  * @property Request $request The request object.
  * @property Response $response The response object.
  * @property-read string $help The help information for this controller.
+ * @property-write bool $help Whether to display help information about current command.
  * @property-read string $helpSummary The one-line short summary describing this controller.
  * @property-read array $passedOptionValues The properties corresponding to the passed options.
  * @property-read array $passedOptions The names of the options passed during execution.
@@ -41,7 +42,7 @@ use yii\base\Module;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  *
- * @template T of Module
+ * @template T of Module = Module
  * @extends BaseController<T>
  */
 class Controller extends BaseController
@@ -112,7 +113,7 @@ class Controller extends BaseController
      * If the action ID is empty, the method will use [[defaultAction]].
      * @param string $id the ID of the action to be executed.
      * @param array $params the parameters (name-value pairs) to be passed to the action.
-     * @return int the status of the action execution. 0 means normal, other values mean abnormal.
+     * @return mixed the result of the action.
      * @throws InvalidRouteException if the requested action ID cannot be resolved into an action successfully.
      * @throws Exception if there are unknown options or missing arguments
      * @see createAction
@@ -192,12 +193,12 @@ class Controller extends BaseController
      * This method is invoked by [[Action]] when it begins to run with the given parameters.
      * This method will first bind the parameters with the [[options()|options]]
      * available to the action. It then validates the given arguments.
-     * @param Action<$this> $action the action to be bound with parameters
+     * @param Action<static> $action the action to be bound with parameters
      * @param array<array-key, mixed> $params the parameters to be bound to the action
      * @return mixed[] the valid parameters that the action can run with.
      * @throws Exception if there are unknown options or missing arguments
      *
-     * @phpstan-param Action<$this> $action
+     * @phpstan-param Action<static> $action
      * @psalm-param Action<self> $action
      */
     public function bindActionParams($action, $params)
@@ -542,10 +543,10 @@ class Controller extends BaseController
 
     /**
      * Returns a one-line short summary describing the specified action.
-     * @param Action<$this> $action action to get summary for
+     * @param Action<static> $action action to get summary for
      * @return string a one-line short summary describing the specified action.
      *
-     * @phpstan-param Action<$this> $action
+     * @phpstan-param Action<static> $action
      * @psalm-param Action<self> $action
      */
     public function getActionHelpSummary($action)
@@ -559,10 +560,10 @@ class Controller extends BaseController
 
     /**
      * Returns the detailed help information for the specified action.
-     * @param Action<$this> $action action to get help for
+     * @param Action<static> $action action to get help for
      * @return string the detailed help information for the specified action.
      *
-     * @phpstan-param Action<$this> $action
+     * @phpstan-param Action<static> $action
      * @psalm-param Action<self> $action
      */
     public function getActionHelp($action)
@@ -584,10 +585,10 @@ class Controller extends BaseController
      * The default implementation will return the help information extracted from the Reflection or
      * DocBlock of the parameters corresponding to the action method.
      *
-     * @param Action<$this> $action the action instance
+     * @param Action<static> $action the action instance
      * @return array the help information of the action arguments
      *
-     * @phpstan-param Action<$this> $action
+     * @phpstan-param Action<static> $action
      * @psalm-param Action<self> $action
      */
     public function getActionArgsHelp($action)
@@ -660,10 +661,10 @@ class Controller extends BaseController
      * The default implementation will return the help information extracted from the doc-comment of
      * the properties corresponding to the action options.
      *
-     * @param Action<$this> $action
+     * @param Action<static> $action
      * @return array the help information of the action options
      *
-     * @phpstan-param Action<$this> $action
+     * @phpstan-param Action<static> $action
      * @psalm-param Action<self> $action
      */
     public function getActionOptionsHelp($action)
@@ -718,10 +719,10 @@ class Controller extends BaseController
     private $_reflections = [];
 
     /**
-     * @param Action<$this> $action
+     * @param Action<static> $action
      * @return \ReflectionFunctionAbstract
      *
-     * @phpstan-param Action<$this> $action
+     * @phpstan-param Action<static> $action
      * @psalm-param Action<self> $action
      */
     protected function getActionMethodReflection($action)
@@ -767,10 +768,10 @@ class Controller extends BaseController
     /**
      * Returns the first line of docblock.
      *
-     * @param \ReflectionClass<$this>|\ReflectionProperty|\ReflectionFunctionAbstract $reflection
+     * @param \ReflectionClass<static>|\ReflectionProperty|\ReflectionFunctionAbstract $reflection
      * @return string
      *
-     * @phpstan-param \ReflectionClass<$this>|\ReflectionProperty|\ReflectionFunctionAbstract $reflection
+     * @phpstan-param \ReflectionClass<static>|\ReflectionProperty|\ReflectionFunctionAbstract $reflection
      * @psalm-param \ReflectionClass<self>|\ReflectionProperty|\ReflectionFunctionAbstract $reflection
      */
     protected function parseDocCommentSummary($reflection)
@@ -786,10 +787,10 @@ class Controller extends BaseController
     /**
      * Returns full description from the docblock.
      *
-     * @param \ReflectionClass<$this>|\ReflectionProperty|\ReflectionFunctionAbstract $reflection
+     * @param \ReflectionClass<static>|\ReflectionProperty|\ReflectionFunctionAbstract $reflection
      * @return string
      *
-     * @phpstan-param \ReflectionClass<$this>|\ReflectionProperty|\ReflectionFunctionAbstract $reflection
+     * @phpstan-param \ReflectionClass<static>|\ReflectionProperty|\ReflectionFunctionAbstract $reflection
      * @psalm-param \ReflectionClass<self>|\ReflectionProperty|\ReflectionFunctionAbstract $reflection
      */
     protected function parseDocCommentDetail($reflection)

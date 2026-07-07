@@ -67,14 +67,14 @@ use yii\base\InvalidConfigException;
  * marks a relation as inverse of another relation and [[onCondition()]] which adds a condition that
  * is to be added to relational query join condition.
  *
- * @template T of (ActiveRecord|array)
+ * @template T of ActiveRecord|array = ActiveRecord|array<array-key, mixed>
  *
  * @method T|null one($db = null) See [[ActiveQueryInterface::one()]] for more info.
  * @method T[] all($db = null) See [[ActiveQueryInterface::all()]] for more info.
  * @method ($value is true ? (T is array ? static<T> : static<array<string, mixed>>) : static<T>) asArray($value = true) Sets the [[asArray]] property.
  * @method BatchQueryResult<int, T[]> batch($batchSize = 100, $db = null) the batch query result. It implements the [[\Iterator]] interface
  * and can be traversed to retrieve the data in batches.
- * @method BatchQueryResult<int, T> each($batchSize = 100, $db = null) the batch query result. It implements the [[\Iterator]] interface
+ * @method BatchQueryResult<array-key, T> each($batchSize = 100, $db = null) the batch query result. It implements the [[\Iterator]] interface
  * and can be traversed to retrieve the data in batches.
  *
  * @author Qiang Xue <qiang.xue@gmail.com>
@@ -257,7 +257,7 @@ class ActiveQuery extends Query implements ActiveQueryInterface
     private function removeDuplicatedModels($models)
     {
         $hash = [];
-        /** @var class-string<ActiveRecord> */
+        /** @var class-string<ActiveRecord> $class */
         $class = $this->modelClass;
         $pks = $class::primaryKey();
 
@@ -628,8 +628,8 @@ class ActiveQuery extends Query implements ActiveQueryInterface
     /**
      * Joins a parent query with a child query.
      * The current query object will be modified accordingly.
-     * @param ActiveQuery<ActiveRecord|array<string, mixed>> $parent
-     * @param ActiveQuery<ActiveRecord|array<string, mixed>> $child
+     * @param ActiveQuery $parent
+     * @param ActiveQuery $child
      * @param string $joinType
      */
     private function joinWithRelation($parent, $child, $joinType)

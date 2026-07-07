@@ -6,7 +6,7 @@
  * @license https://www.yiiframework.com/license/
  */
 
-namespace yiiunit\framework\console;
+namespace yiiunit\framework\console\stubs;
 
 use yii\console\controllers\HelpController;
 
@@ -14,9 +14,10 @@ class FakeHelpController extends HelpController
 {
     private static $_actionIndexLastCallParams;
 
-    public function actionIndex($command = null): void
+    public function actionIndex($command = null)
     {
         self::$_actionIndexLastCallParams = func_get_args();
+        return 0;
     }
 
     public static function getActionIndexLastCallParams()

@@ -14,7 +14,6 @@ use yii\base\InvalidConfigException;
 use yii\helpers\ArrayHelper;
 use yii\helpers\StringHelper;
 use yii\helpers\VarDumper;
-use yii\web\IdentityInterface;
 use yii\web\Request;
 use yii\web\User;
 
@@ -29,7 +28,9 @@ use yii\web\User;
  * satisfying both filter conditions will be handled. Additionally, you
  * may specify [[except]] to exclude messages of certain categories.
  *
- * @property bool $enabled Indicates whether this log target is enabled. Defaults to true. Note that the type
+ * @property-read bool $enabled Indicates whether this log target is enabled. Defaults to true. Note that the type
+ * of this property differs in getter and setter. See [[getEnabled()]] and [[setEnabled()]] for details.
+ * @property-write bool|callable $enabled A boolean value or a callable to obtain the value from. Note that the type
  * of this property differs in getter and setter. See [[getEnabled()]] and [[setEnabled()]] for details.
  * @property int $levels The message levels that this target is interested in. This is a bitmap of level
  * values. Defaults to 0, meaning all available levels. Note that the type of this property differs in getter and
@@ -347,7 +348,7 @@ abstract class Target extends Component
         $request = Yii::$app->getRequest();
         $ip = $request instanceof Request ? $request->getUserIP() : '-';
 
-        /** @var User<IdentityInterface> $user */
+        /** @var User $user */
         $user = Yii::$app->has('user', true) ? Yii::$app->get('user') : null;
         if ($user && ($identity = $user->getIdentity(false))) {
             $userID = $identity->getId();

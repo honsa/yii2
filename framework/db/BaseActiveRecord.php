@@ -1317,7 +1317,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
                 throw new InvalidCallException('Unable to link models: the models being linked cannot be newly created.');
             }
             if (is_array($relation->via)) {
-                /** @var ActiveQuery<ActiveRecord|array<string, mixed>> $viaRelation */
+                /** @var ActiveQuery $viaRelation */
                 list($viaName, $viaRelation) = $relation->via;
                 $viaClass = $viaRelation->modelClass;
                 // unset $viaName so that it can be reloaded to reflect the change
@@ -1513,7 +1513,7 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
 
         if ($relation->via !== null) {
             if (is_array($relation->via)) {
-                /** @var ActiveQuery<ActiveRecord|array<string, mixed>> $viaRelation */
+                /** @var ActiveQuery $viaRelation */
                 list($viaName, $viaRelation) = $relation->via;
                 $viaClass = $viaRelation->modelClass;
                 unset($this->_related[$viaName]);
@@ -1817,12 +1817,16 @@ abstract class BaseActiveRecord extends Model implements ActiveRecordInterface
      * }
      * ```
      *
-     * @param array|ActiveRecordInterface[] $models array of primary models. Each model should have the same type and can be:
+     * @template TModels of array
+     *
+     * @param TModels $models array of primary models. Each model should have the same type and can be:
      * - an active record instance;
      * - active record instance represented by array (i.e. active record was loaded using [[ActiveQuery::asArray()]]).
      * @param string|array $relationNames the names of the relations of primary models to be loaded from database. See [[ActiveQueryInterface::with()]] on how to specify this argument.
      * @param bool $asArray whether to load each related model as an array or an object (if the relation itself does not specify that).
      * @since 2.0.50
+     *
+     * @param-out TModels $models
      */
     public static function loadRelationsFor(&$models, $relationNames, $asArray = false)
     {

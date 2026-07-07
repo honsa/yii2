@@ -72,7 +72,7 @@ class BaseYii
      */
     public static $classMap = [];
     /**
-     * @var \yii\console\Application|\yii\web\Application<TUserIdentity> the application instance
+     * @var \yii\console\Application|\yii\web\Application<TUserIdentity>|null the application instance
      */
     public static $app;
     /**
@@ -97,7 +97,7 @@ class BaseYii
      */
     public static function getVersion()
     {
-        return '2.0.55-dev';
+        return '2.0.56-dev';
     }
 
     /**

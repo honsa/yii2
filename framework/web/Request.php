@@ -41,7 +41,7 @@ use yii\validators\IpValidator;
  * @property-read string|null $authUser The username sent via HTTP authentication, `null` if the username is
  * not given.
  * @property string $baseUrl The relative URL for the application.
- * @property array|object $bodyParams The request parameters given in the request body.
+ * @property mixed $bodyParams The request parameters given in the request body.
  * @property-read string $contentType Request content-type. Empty string is returned if this information is
  * not available.
  * @property-read CookieCollection $cookies The cookie collection.
@@ -583,6 +583,7 @@ class Request extends \yii\base\Request
         $this->_rawBody = $rawBody;
     }
 
+    /** @var mixed */
     private $_bodyParams;
 
     /**
@@ -591,7 +592,7 @@ class Request extends \yii\base\Request
      * Request parameters are determined using the parsers configured in [[parsers]] property.
      * If no parsers are configured for the current [[contentType]] it uses the PHP function `mb_parse_str()`
      * to parse the [[rawBody|request body]].
-     * @return array|object the request parameters given in the request body.
+     * @return mixed the request parameters given in the request body.
      * @throws \yii\base\InvalidConfigException if a registered parser does not implement the [[RequestParserInterface]].
      * @see getMethod()
      * @see getBodyParam()
@@ -641,7 +642,7 @@ class Request extends \yii\base\Request
     /**
      * Sets the request body parameters.
      *
-     * @param array|object $values the request body parameters (name-value pairs)
+     * @param mixed $values the request body parameters (name-value pairs)
      * @see getBodyParams()
      */
     public function setBodyParams($values)
@@ -679,9 +680,9 @@ class Request extends \yii\base\Request
     /**
      * Returns POST parameter with a given name. If name isn't specified, returns an array of all POST parameters.
      *
-     * @param string $name the parameter name
+     * @param string|null $name the parameter name
      * @param mixed $defaultValue the default parameter value if the parameter does not exist.
-     * @return array|mixed
+     * @return mixed
      */
     public function post($name = null, $defaultValue = null)
     {
@@ -692,6 +693,7 @@ class Request extends \yii\base\Request
         return $this->getBodyParam($name, $defaultValue);
     }
 
+    /** @var array */
     private $_queryParams;
 
     /**
@@ -724,9 +726,9 @@ class Request extends \yii\base\Request
     /**
      * Returns GET parameter with a given name. If name isn't specified, returns an array of all GET parameters.
      *
-     * @param string $name the parameter name
+     * @param string|null $name the parameter name
      * @param mixed $defaultValue the default parameter value if the parameter does not exist.
-     * @return array|mixed
+     * @return ($name is null ? array : mixed)
      */
     public function get($name = null, $defaultValue = null)
     {
@@ -1763,11 +1765,7 @@ class Request extends \yii\base\Request
                 if ($data === false) {
                     continue;
                 }
-                if (defined('PHP_VERSION_ID') && PHP_VERSION_ID >= 70000) {
-                    $data = @unserialize($data, ['allowed_classes' => false]);
-                } else {
-                    $data = @unserialize($data);
-                }
+                $data = @unserialize($data, ['allowed_classes' => false]);
                 if (is_array($data) && isset($data[0], $data[1]) && $data[0] === $name) {
                     $cookies[$name] = Yii::createObject([
                         'class' => 'yii\web\Cookie',

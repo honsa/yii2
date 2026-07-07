@@ -113,7 +113,7 @@ abstract class Application extends Module
      */
     public $sourceLanguage = 'en-US';
     /**
-     * @var Controller<Module>|null the currently active controller instance
+     * @var Controller|null the currently active controller instance
      */
     public $controller;
     /**
@@ -126,11 +126,11 @@ abstract class Application extends Module
      */
     public $requestedRoute;
     /**
-     * @var Action<covariant Controller<Module>>|null the requested Action. If null, it means the request cannot be resolved into an action.
+     * @var Action<covariant Controller>|null the requested Action. If null, it means the request cannot be resolved into an action.
      */
     public $requestedAction;
     /**
-     * @var array the parameters supplied to the requested action.
+     * @var array|null the parameters supplied to the requested action.
      */
     public $requestedParams;
     /**
@@ -186,7 +186,7 @@ abstract class Application extends Module
 
     /**
      * Constructor.
-     * @param array<string, mixed> $config name-value pairs that will be used to initialize the object properties.
+     * @param array<array-key, mixed> $config name-value pairs that will be used to initialize the object properties.
      * Note that the configuration must contain both [[id]] and [[basePath]].
      * @throws InvalidConfigException if either [[id]] or [[basePath]] configuration is missing.
      */

@@ -48,7 +48,7 @@ use yii\rbac\CheckAccessInterface;
  * ]
  * ```
  *
- * @template T of IdentityInterface
+ * @template T of IdentityInterface = IdentityInterface
  *
  * @property-read string|int|null $id The unique identifier for the user. If `null`, it means the user is a
  * guest.
@@ -794,7 +794,7 @@ class User extends Component
      *
      * By default this is the `authManager` application component.
      * You may override this method to return a different auth manager instance if needed.
-     * @return \yii\rbac\ManagerInterface
+     * @return \yii\rbac\ManagerInterface|null
      * @since 2.0.6
      * @deprecated since version 2.0.9, to be removed in 2.1. Use [[getAccessChecker()]] instead.
      */
@@ -805,7 +805,7 @@ class User extends Component
 
     /**
      * Returns the access checker used for checking access.
-     * @return CheckAccessInterface
+     * @return CheckAccessInterface|null
      * @since 2.0.9
      */
     protected function getAccessChecker()

@@ -6,7 +6,7 @@
  * @license https://www.yiiframework.com/license/
  */
 
-namespace yiiunit\framework\console;
+namespace yiiunit\framework\console\stubs;
 
 use yii\console\controllers\HelpController;
 
@@ -16,6 +16,7 @@ class FakeHelpControllerWithoutOutput extends HelpController
 
     public function stdout($string)
     {
-        return $this->outputString .= $string;
+        $this->outputString .= $string;
+        return 0;
     }
 }

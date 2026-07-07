@@ -193,6 +193,25 @@ class ValidatorTest extends TestCase
         $this->assertFalse($val->isEmpty('  '));
     }
 
+    public function testIsEmptyWithCustomCallable(): void
+    {
+        $val = new TestValidator();
+        $val->isEmpty = function ($value) {
+            return $value === 'EMPTY';
+        };
+        $this->assertTrue($val->isEmpty('EMPTY'));
+        $this->assertFalse($val->isEmpty('not empty'));
+        $this->assertFalse($val->isEmpty(null));
+    }
+
+    public function testGetClientOptions(): void
+    {
+        $val = new TestValidator();
+        $model = $this->getTestModel();
+        $options = $val->getClientOptions($model, 'attr_runMe1');
+        $this->assertSame([], $options);
+    }
+
     public function testValidateValue(): void
     {
         $this->expectException('yii\base\NotSupportedException');
@@ -230,6 +249,8 @@ class ValidatorTest extends TestCase
 
         $model = new FakedValidationModel();
         $val = Validator::createValidator('inlineVal', $model, ['val_attr_a'], ['params' => ['foo' => 'bar']]);
+        $this->assertInstanceOf(InlineValidator::class, $val);
+
         $val->clientValidate = 'clientInlineVal';
         $args = $val->clientValidateAttribute($model, 'val_attr_a', $view);
 
