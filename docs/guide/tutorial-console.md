@@ -16,6 +16,7 @@ This will give you a list of available commands when you run it without any furt
 
 As you can see in the screenshot, Yii has already defined a set of commands that are available by default:
 
+- [[yii\console\controllers\AnalyzeController|AnalyzeController]] - Allows you to analyze PHP code and log files for common issues and patterns.
 - [[yii\console\controllers\AssetController|AssetController]] - Allows you to combine and compress your JavaScript and CSS files.
   You can learn more about this command in the [Assets Section](structure-assets.md#using-asset-bundles).
 - [[yii\console\controllers\CacheController|CacheController]] - Allows you to flush application caches.
